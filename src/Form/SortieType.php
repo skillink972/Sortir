@@ -14,7 +14,7 @@ class SortieType extends AbstractType
         $builder
             ->add('nom')
             ->add('infoSortie')
-            ->add('dateHeureDébut')
+            ->add('dateHeureDebut')
             ->add('duree')
             ->add('dateLimiteInscription')
             ->add('nbreInscritsMax')
