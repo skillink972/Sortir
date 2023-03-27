@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\ParticipantRepository;
@@ -37,6 +36,16 @@ class SortieController extends AbstractController
 
 
         return $this->render('sortie/afficher.html.twig');
+
+    #[Route('/CreeSortie', name: 'CreeSortie')]
+    public function nouveau(): Response
+    {
+        $Sortie = new Sortie();
+        $SortieForm = $this->createForm(SortieType::class, $Sortie);
+
+        return $this->render('cree_sortie/index.html.twig',
+            compact('SortieForm')
+        );
     }
 
 }

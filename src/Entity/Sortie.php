@@ -20,7 +20,7 @@ class Sortie
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateHeureDébut = null;
+    private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duree = null;
@@ -75,14 +75,14 @@ class Sortie
         return $this;
     }
 
-    public function getDateHeureDébut(): ?\DateTimeInterface
+    public function getDateHeureDebut(): ?\DateTimeInterface
     {
-        return $this->dateHeureDébut;
+        return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDébut(\DateTimeInterface $dateHeureDébut): self
+    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
     {
-        $this->dateHeureDébut = $dateHeureDébut;
+        $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
     }
