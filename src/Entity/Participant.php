@@ -6,10 +6,14 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
+
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -56,6 +60,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'Participants')]
     private Collection $sortiesParticipees;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $telephone = null;
 
     public function __construct()
     {
@@ -273,4 +280,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
 }

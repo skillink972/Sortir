@@ -15,6 +15,34 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+    {% block entete %}
+    <header>
+        <nav>
+
+            <h1> Sortir.com </h1>
+            <ul style="list-style-type:none;"  >
+                <li ><a class= "link" href="{{ path ('app_main') }}">Accueil</a></li>
+                {% if app.user %}
+                   {#  <li ><a class= "link" href="{{ path ('main_wish') }}">Mon profil</a></li> #}
+                    <li>Bonjour {{ app.user.pseudo }} :-) </li>
+                    <li ><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
+                {%  elseif  app.user==null %}
+                    <li ><a class= "link" href="{{ path ('app_register') }}">Créer un compte</a></li>
+                    <li ><a class= "link" href="{{ path ('app_login') }}">Se connecter</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    {% endblock %}
+
+    {% block body %}{% endblock %}
+
+    {% block footer %}
+        <footer>
+            © Sortir.com {{ 'now' | date("F Y")  }}
+        </footer>
+
+    {% endblock %}
+
     </body>
 </html>
