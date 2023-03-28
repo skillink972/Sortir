@@ -21,37 +21,37 @@
         <input type="checkbox" id="sortiesPassees">
         <input type="submit" id="rechercher" value="Rechercher">
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>Inscrits/Nombre de places</th>
-                <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sortie in Sorties %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut | date ('d/m/y H:i')}}</td>
-                    <td>{{ sortie.dateLimiteInscription | date ('d/m/y H:i')}}</td>
-                    <td>{{ sortie.participants}}/{{ sortie.nbreInscritsMax }}</td>
-                    <td>{{ sortie.etat}}</td>
-                    <td>
-                        {% if (sortie.id === app.user.sortiesParticipees.id) %}
-                            x
-                        {% endif %}
-                    </td>
-                    <td>{{ sortie.organisateur}}</td>
-                    <td>liens</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{#    <table>#}
+{#        <thead>#}
+{#            <tr>#}
+{#                <th>Nom de la sortie</th>#}
+{#                <th>Date de la sortie</th>#}
+{#                <th>Clôture</th>#}
+{#                <th>Inscrits/Nombre de places</th>#}
+{#                <th>Etat</th>#}
+{#                <th>Inscrit</th>#}
+{#                <th>Organisateur</th>#}
+{#                <th>Actions</th>#}
+{#            </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#            {% for sortie in Sorties %}#}
+{#                <tr>#}
+{#                    <td>{{ sortie.nom }}</td>#}
+{#                    <td>{{ sortie.dateHeureDebut | date ('d/m/y H:i')}}</td>#}
+{#                    <td>{{ sortie.dateLimiteInscription | date ('d/m/y H:i')}}</td>#}
+{#                    <td>{{ sortie.participants.count()}}/{{ sortie.nbreInscritsMax }}</td>#}
+{#                    <td>{{ sortie.etat}}</td>#}
+{#                    <td>#}
+{#                        {% if (sortie.id === app.user.sortiesParticipees.id) %}#}
+{#                            x#}
+{#                        {% endif %}#}
+{#                    </td>#}
+{#                    <td>{{ sortie.organisateur}}</td>#}
+{#                    <td>liens</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
 </section>
 {% endblock %}

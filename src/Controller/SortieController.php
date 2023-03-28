@@ -13,19 +13,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
 
-    #[Route('/Afficher', name: '_afficher')]
+    #[Route('/afficher', name: '_afficher')]
     public function afficher(
-        SortieRepository $sortieRepository,
-        ParticipantRepository $participantRepository
-    ):Response {
+        SortieRepository $sortieRepository
+    ):Response
+    {
         $sortiesDontJeSuisOrganisateur = $sortieRepository->findBy(
             [
-            "organisateur" => $this->getUser()->getUserIdentifier()
+                "organisateur" => $this->getUser()->getUserIdentifier()
             ]
         );
         $sortiesAuxquellesJeSuisInscrit = $sortieRepository->findBy(
             [
-                "participant_id" => $this->getUser()->getUserIdentifier()
+                "participants" => $this->getUser()->getUserIdentifier()
             ]
         );
         $sortiesAuxquellesJeNeSuisPasInscrit = $sortieRepository->findBy(
@@ -34,8 +34,8 @@ class SortieController extends AbstractController
             ]
         );
 
-
         return $this->render('sortie/afficher.html.twig');
+    }
 
     #[Route('/CreeSortie', name: 'CreeSortie')]
     public function nouveau(): Response
