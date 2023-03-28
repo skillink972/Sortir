@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -19,14 +20,31 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pseudo')
-            ->add('prenom')
-            ->add('nom')
-            ->add('telephone')
-            ->add('email')
+            ->add('pseudo',null,[
+                    'label' => 'Pseudo : '
+
+                    ])
+
+            ->add('prenom',null,[
+                'label' => 'Prénom : '
+
+            ])
+            ->add('nom',null,[
+                'label' => 'Nom : '
+
+            ])
+            ->add('telephone',null,[
+                'label' => 'Téléphone : '
+
+            ])
+            ->add('email',null,[
+                'label' => 'Email : '
+
+            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
+                'label' => 'Mot de passe : ',
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
@@ -46,8 +64,13 @@ class RegistrationFormType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'nom',
                 'expanded' => true,
+                'label' => 'Campus : '
             ])
-            ->add('photo')
+            ->add('photo',null,[
+                'label' => 'Photo : '
+
+            ])
+
         ;
     }
 

@@ -21,9 +21,9 @@
 
             <h1> Sortir.com </h1>
             <ul style="list-style-type:none;"  >
-                <li ><a class= "link" href="{{ path ('app_main') }}">Accueil</a></li>
+                <li ><a class= "link" href="{{ path ('main_index') }}">Accueil</a></li>
                 {% if app.user %}
-                   {#  <li ><a class= "link" href="{{ path ('main_wish') }}">Mon profil</a></li> #}
+                   <li ><a class= "link" href="{{ path (('participant_modifier'), {'participant' : app.user.id }) }}">Mon profil</a></li>
                     <li>Bonjour {{ app.user.pseudo }} :-) </li>
                     <li ><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
                 {%  elseif  app.user==null %}
