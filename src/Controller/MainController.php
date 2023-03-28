@@ -10,17 +10,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class MainController extends AbstractController
 {
-    #[Route('/', name: 'app_main')]
+    #[Route('/', name: 'main_index')]
     public function index(): Response
     {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
-    } #[Route('/MonProfil', name: 'app_MonProfil')]
-    public function MonProfil(): Response
-    {
-        return $this->render('main/MonProfil.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        return $this->render('main/index.html.twig');
     }
+    #[Route('/participant', name: 'main_participant')]
+    public function participant(): Response
+    {
+        return $this->render('participant/MonProfil.html.twig');
+    }
+
 }
