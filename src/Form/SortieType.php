@@ -22,7 +22,7 @@ class SortieType extends AbstractType
             ->add('etat')
             ->add('campus')
             ->add('organisateur')
-            ->add('Participants')
+            ->add('participants')
         ;
     }
 

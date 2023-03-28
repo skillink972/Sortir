@@ -37,14 +37,14 @@ class SortieController extends AbstractController
         return $this->render('sortie/afficher.html.twig');
     }
 
-    #[Route('/CreeSortie', name: 'CreeSortie')]
-    public function nouveau(): Response
+    #[Route('/creer', name: '_creer')]
+    public function creer(): Response
     {
-        $Sortie = new Sortie();
-        $SortieForm = $this->createForm(SortieType::class, $Sortie);
+        $sortie = new Sortie();
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
 
-        return $this->render('cree_sortie/index.html.twig',
-            compact('SortieForm')
+        return $this->render('sortie/creer.html.twig',
+            compact('sortieForm')
         );
     }
 
