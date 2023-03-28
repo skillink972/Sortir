@@ -8,33 +8,38 @@ use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name:'sortie')]
 class SortieController extends AbstractController
 {
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/afficher', name: '_afficher')]
     public function afficher(
         SortieRepository $sortieRepository
     ):Response
     {
-        $sortiesDontJeSuisOrganisateur = $sortieRepository->findBy(
-            [
-                "organisateur" => $this->getUser()->getUserIdentifier()
-            ]
-        );
-        $sortiesAuxquellesJeSuisInscrit = $sortieRepository->findBy(
-            [
-                "participants" => $this->getUser()->getUserIdentifier()
-            ]
-        );
-        $sortiesAuxquellesJeNeSuisPasInscrit = $sortieRepository->findBy(
-            [
+        $sorties = $sortieRepository->findAll();
+//        $sortiesDontJeSuisOrganisateur = $sortieRepository->findBy(
+//            [
+//                "organisateur" => $this->getUser()->getUserIdentifier()
+//            ]
+//        );
+//        $sortiesAuxquellesJeSuisInscrit = $sortieRepository->findBy(
+//            [
+//                "participants" => $this->getUser()->getUserIdentifier()
+//            ]
+//        );
+//        $sortiesAuxquellesJeNeSuisPasInscrit = $sortieRepository->findBy(
+//            [
+//
+//            ]
+//        );
 
-            ]
+        return $this->render('sortie/afficher.html.twig',
+            compact('sorties')
         );
-
-        return $this->render('sortie/afficher.html.twig');
     }
 
     #[Route('/creer', name: '_creer')]

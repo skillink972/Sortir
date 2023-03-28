@@ -56,9 +56,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Campus $campus = null;
 
     #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class)]
-    private Collection $SortiesOrganisees;
+    private Collection $sortiesOrganisees;
 
-    #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'Participants')]
+    #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants')]
     private Collection $sortiesParticipees;
 
     #[ORM\Column(length: 15, nullable: true)]
@@ -66,7 +66,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->SortiesOrganisees = new ArrayCollection();
+        $this->sortiesOrganisees = new ArrayCollection();
         $this->sortiesParticipees = new ArrayCollection();
     }
 
@@ -229,13 +229,13 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getSortiesOrganisees(): Collection
     {
-        return $this->SortiesOrganisees;
+        return $this->sortiesOrganisees;
     }
 
     public function addSortiesOrganisee(Sortie $sortiesOrganisee): self
     {
-        if (!$this->SortiesOrganisees->contains($sortiesOrganisee)) {
-            $this->SortiesOrganisees->add($sortiesOrganisee);
+        if (!$this->sortiesOrganisees->contains($sortiesOrganisee)) {
+            $this->sortiesOrganisees->add($sortiesOrganisee);
             $sortiesOrganisee->setOrganisateur($this);
         }
 
@@ -244,7 +244,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeSortiesOrganisee(Sortie $sortiesOrganisee): self
     {
-        if ($this->SortiesOrganisees->removeElement($sortiesOrganisee)) {
+        if ($this->sortiesOrganisees->removeElement($sortiesOrganisee)) {
             // set the owning side to null (unless already changed)
             if ($sortiesOrganisee->getOrganisateur() === $this) {
                 $sortiesOrganisee->setOrganisateur(null);
