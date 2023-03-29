@@ -20,6 +20,7 @@ class MainController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/MonProfil', name: 'app_MonProfil')]
     public function MonProfil(): Response
+    {
         return $this->render('main/index.html.twig');
     }
     #[Route('/participant', name: 'main_participant')]

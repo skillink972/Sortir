@@ -78,7 +78,8 @@ if($SortieForm->isSubmitted() && $SortieForm->isValid()) {
         return $this->redirectToRoute('CreeSortie');
     }
 }
-        return $this->render('cree_sortie/index.html.twig',
+        return $this->render('cree_sortie/index.html.twig');
+    }
 
     #[Route('/creer', name: '_creer')]
     public function creer(): Response
