@@ -22,14 +22,54 @@ class ParticipantController extends AbstractController
 
     ): Response
     {
-        $participants = $participantRepository->findBy(
+        $participant = $participantRepository->findBy(
             [
                 'id' => $this->getUser()->getUserIdentifier()
             ]
         );
 
         return $this->render('participant/MonProfil.html.twig',
-            compact('participants'));
+            compact('participant'));
+
+    }
+
+    #[Route(
+        '/AutreProfil/{participant}',
+        name: '_Autreprofil'
+    )]
+    public function _AutreProfil(
+
+        ParticipantRepository  $participantRepository,
+        Participant $participant
+
+    ): Response
+    {
+        $autreProfil = $participantRepository->find($participant);
+        if (!$autreProfil) {
+            throw $this->createNotFoundException('Cette personne n\'existe pas.');
+        }
+
+        return $this->render('participant/AutreProfil.html.twig',
+            compact('autreProfil')
+        );
+
+    }
+
+    #[Route('/confirmationSuppression', name: '_ConfirmationSuppression')]
+    public function _ConfirmationSuppression(
+
+        ParticipantRepository  $participantRepository,
+
+    ): Response
+    {
+        $participant = $participantRepository->findBy(
+            [
+                'id' => $this->getUser()->getUserIdentifier()
+            ]
+        );
+
+        return $this->render('participant/SupprimerCompte.html.twig',
+            compact('participant'));
 
     }
 
@@ -40,8 +80,7 @@ class ParticipantController extends AbstractController
         requirements: ['id' => '\d+']
     )]
     public function modifier(
-        Participant $participant,
-        ParticipantRepository  $participantRepository,
+        Participant            $participant,
         Request                $request,
         EntityManagerInterface $entityManager
 
@@ -66,28 +105,27 @@ class ParticipantController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
 
-            return $this->redirectToRoute('main_index');
+            return $this->redirectToRoute('participant_MonProfil');
         }
 
-
-        return $this->render('participant/MonProfil.html.twig', compact('participantForm'));
+        return $this->render('participant/ModifierMonProfil.html.twig', compact('participantForm'));
 
     }
 
-    #[IsGranted('ROLE_USER')]
+
     #[Route(
         '/supprimer/{participant}',
         name: '_supprimer',
-        requirements: ['id' => '\d+']
+       // requirements: ['participant' => '\d+']
     )]
     public function supprimer(
-        Participant $participant,
-        EntityManagerInterface $entityManager
+        Participant             $participant,
+        EntityManagerInterface  $entityManager
     ): Response {
 
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_login');
+        return $this->render('main/index.html.twig');
     }
 }

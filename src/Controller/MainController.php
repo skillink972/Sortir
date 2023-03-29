@@ -18,7 +18,7 @@ class MainController extends AbstractController
     #[Route('/participant', name: 'main_participant')]
     public function participant(): Response
     {
-        return $this->render('participant/MonProfil.html.twig');
+        return $this->render('participant/ModifierMonProfil.html.twig');
     }
 
 }

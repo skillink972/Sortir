@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div>
+        <p>
+            {% if autreProfil.photo != null %}
+            Photo : <img src="{{ autreProfil.photo }}" alt="photo de profil de {{ autreProfil.pseudo }} "> <br>
+            {% endif %}
+            Pseudo  : {{ autreProfil.pseudo }} <br>
+            Prénom : {{ autreProfil.prenom }} <br>
+            Nom : {{ autreProfil.nom }} <br>
+            Téléphone : {{ autreProfil.telephone }} <br>
+            Email : {{ autreProfil.email }} <br>
+            Campus : {{ autreProfil.campus.nom }} <br>
+
+        </p>
+    </div>
+
+{% endblock %}
+
+
+
