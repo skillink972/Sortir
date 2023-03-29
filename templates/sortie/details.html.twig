@@ -7,7 +7,7 @@
         Date limite d'inscription : {{ sortie.dateLimiteInscription | date ('d/m/y H:i') }} <br>
         Nombre de places : {{ sortie.nbreInscritsMax }} <br>
         Durée : {{ sortie.duree }} minutes <br>
-        Description et infos : {{ sortie.infoSortie }} <br>
+        Description et infos : {{ sortie.infoSortie ? sortie.infoSortie : "Aucune infos" }} <br>
     </p>
     <p>
         Campus : {{ sortie.campus.nom }} <br>
