@@ -53,6 +53,25 @@ class Sortie
     #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'sortiesParticipees')]
     private Collection $participants;
 
+    private ?Ville $ville = null;
+
+    /**
+     * @return Ville|null
+     */
+    public function getVille(): ?Ville
+    {
+        return $this->ville;
+    }
+
+    /**
+     * @param Ville|null $ville
+     */
+    public function setVille(?Ville $ville): void
+    {
+        $this->ville = $ville;
+    }
+
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();

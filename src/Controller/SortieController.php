@@ -64,7 +64,8 @@ if($SortieForm->isSubmitted() && $SortieForm->isValid()) {
         $etat=  $etatRepository->findOneBy(["libelle"=>'en cours']);
         $Sortie->setEtat($etat);
         $Sortie->setCampus($utilisateurConnecte->getCampus());
-        $Sortie->setOrganisateur($utilisateurConnecte->getnom());
+        $organistateur = $participantRepository->findOneBy(["nom"=>$utilisateurConnecte->getnom()]);
+        $Sortie->setOrganisateur($organistateur);
         $entityManager->persist($Sortie);
         $entityManager->flush();
     }catch (\Exception $exception) {
