@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Participant;
 use App\Entity\PropertySearch;
 use App\Entity\Sortie;
 use App\Form\SearchSortieType;
@@ -43,6 +44,7 @@ class SortieController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/creer', name: '_creer')]
     public function nouveau(
         EntityManagerInterface $entityManager,
@@ -82,6 +84,7 @@ class SortieController extends AbstractController
             compact('SortieForm'));
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/details/{sortie}', name: '_details')]
     public function details(
         Sortie $sortie
@@ -91,6 +94,42 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('Cette sortie n\'existe pas');
         }
         return $this->render('sortie/details.html.twig',
+            compact('sortie')
+        );
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/participer/{sortie}', name:'_participer')]
+    public function participer(
+        Sortie $sortie,
+        ParticipantRepository $participantRepository,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $participant = $participantRepository->findOneBy(
+            [
+            "email" => $this->getUser()->getUserIdentifier()
+            ]
+        );
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+        if ($sortie->getParticipants()->count()<$sortie->getNbreInscritsMax() && $sortie->getEtat()->getId()==2 ) {
+            try {
+                $sortie->addParticipant($participant);
+                $entityManager->persist($sortie);
+                $entityManager->flush($sortie);
+                $this->addFlash('msgSucces', "Vous êtes inscrit à la sortie.");
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            } catch (\Exception $e) {
+                $this->addFlash('msgError', "Vous ne pouvez pas vous inscrire à cette sortie car le nombre maximum de participants est atteint.");
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            }
+        }
+        else {
+            $this->addFlash('msgError', "Vous ne pouvez pas vous inscrire à cette sortie car le nombre maximum de participants est atteint.");
+        }
+        return $this->render('sortie/participer.html.twig',
             compact('sortie')
         );
     }
