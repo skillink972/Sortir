@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,15 +32,19 @@ class SearchSortieType extends AbstractType
                     'choice_label'  => 'nom'
                 ])
             ->add('motCle')
-            ->add('dateMin', DateTimeType::class,
+            ->add('dateMin', DateType::class,
                 [
                     'label'         => 'Entre',
-                    'required'      => false
+                    'required'      => false,
+                    'widget'        => 'single_text',
+                    'attr'          => ['class' => 'js-datepicker']
                 ])
-            ->add('dateMax',DateTimeType::class,
+            ->add('dateMax',DateType::class,
                 [
                     'label'         => 'et',
-                    'required'      => false
+                    'required'      => false,
+                    'widget'        => 'single_text',
+                    'attr'          => ['class' => 'js-datepicker']
                 ])
             ->add('organisateur', CheckboxType::class,
                 [
