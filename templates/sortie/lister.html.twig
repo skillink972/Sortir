@@ -36,7 +36,10 @@
                         {% endif %}
                     </td>
                     <td>{{ sortie.organisateur.pseudo}}</td>
-                    <td>liens</td>
+                    <td>
+                        <a href="{{ path ('sortie_details', {'sortie': sortie.id}) }}">Afficher</a>
+                        <a>S'inscrire</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

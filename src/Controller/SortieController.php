@@ -6,7 +6,6 @@ use App\Entity\Sortie;
 use App\Form\SearchSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
-use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,8 +20,8 @@ class SortieController extends AbstractController
 {
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/afficher', name: '_afficher')]
-    public function afficher(
+    #[Route('/lister', name: '_lister')]
+    public function lister(
         Request               $request,
         SortieRepository      $sortieRepository,
         ParticipantRepository $participantRepository
@@ -39,7 +38,7 @@ class SortieController extends AbstractController
         $searchForm = $this->createForm(SearchSortieType::class, $search);
         $searchForm->handleRequest($request);
         $sorties = $sortieRepository->findSearch($search);
-        return $this->render('sortie/afficher.html.twig',
+        return $this->render('sortie/lister.html.twig',
             compact('searchForm', 'sorties')
         );
     }
@@ -79,6 +78,20 @@ class SortieController extends AbstractController
             return $this->render('sortie/creer.html.twig',
                 compact('SortieForm'));
         }
+        return $this->render('sortie/creer.html.twig',
+            compact('SortieForm'));
+    }
 
+    #[Route('/details/{sortie}', name: '_details')]
+    public function details(
+        Sortie $sortie
+    ): Response
+    {
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+        return $this->render('sortie/details.html.twig',
+            compact('sortie')
+        );
     }
 }

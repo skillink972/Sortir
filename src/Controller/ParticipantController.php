@@ -128,4 +128,5 @@ class ParticipantController extends AbstractController
 
         return $this->render('main/index.html.twig');
     }
+
 }

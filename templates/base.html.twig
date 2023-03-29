@@ -23,7 +23,7 @@
             <ul style="list-style-type:none;"  >
                 <li ><a class= "link" href="{{ path ('main_index') }}">Accueil</a></li>
                 {% if app.user %}
-                    <li><a class= "link" href="{{ path ('sortie_afficher') }}">Liste des sorties</a></li>
+                    <li><a class= "link" href="{{ path ('sortie_lister') }}">Liste des sorties</a></li>
                     <li><a class= "link" href="{{ path ('sortie_creer') }}">Crée une sortie</a></li>
                     <li><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
                     <li> Bonjour {{ app.user.pseudo }} :-) </li>
