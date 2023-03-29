@@ -7,9 +7,13 @@ use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Entity\Ville;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -23,6 +27,37 @@ class SortieType extends AbstractType
             ->add('duree')
             ->add('dateLimiteInscription')
             ->add('nbreInscritsMax')
+
+
+            ->add('ville', EntityType::class, [
+                'class' => Ville::class,
+                'choice_label' => 'nom',
+            ])
+            ->add('lieu', EntityType::class, [
+                'class' => Lieu::class,
+                'choice_label' => 'nom',
+            ]);
+
+        $builder->get('ville')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($builder) {
+                $Sortie = $event->getForm();
+                $ville = $Sortie->getData();
+
+                $builder->get('lieu')->resetViewTransformers();
+                $builder->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) use ($ville) {
+                        return $er->createQueryBuilder('l')
+                            ->where('l.ville = :ville')
+                            ->setParameter('ville', $ville);
+                    },
+                ]);
+            }
+        )
+
+
             ->add('lieu')
             ->add('etat')
             ->add('campus')
@@ -33,6 +68,7 @@ class SortieType extends AbstractType
         'class' => Lieu::class,
         'choice_label' => 'nom',
     ])
+
         ;
     }
 
