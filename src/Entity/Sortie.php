@@ -47,7 +47,6 @@ class Sortie
     private ?Campus $campus = null;
 
     #[ORM\ManyToOne(targetEntity: Participant::class, inversedBy: 'sortiesOrganisees')]
-    #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 

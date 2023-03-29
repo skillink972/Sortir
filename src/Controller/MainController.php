@@ -17,11 +17,16 @@ class MainController extends AbstractController
             'controller_name' => 'MainController',
         ]);
     }
+
+
     #[IsGranted('ROLE_USER')]
     #[Route('/MonProfil', name: 'app_MonProfil')]
     public function MonProfil(): Response
+    {
         return $this->render('main/index.html.twig');
     }
+
+
     #[Route('/participant', name: 'main_participant')]
     public function participant(): Response
     {
