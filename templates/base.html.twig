@@ -26,7 +26,7 @@
                     <li><a class= "link" href="{{ path ('sortie_afficher') }}">Liste des sorties</a></li>
                     <li><a class= "link" href="{{ path ('sortie_creer') }}">Crée une sortie</a></li>
                     <li><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
-                    <li>Bonjour {{ app.user.pseudo }} :-) </li>
+                    <li> Bonjour {{ app.user.pseudo }} :-) </li>
                     <li><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
                 {% endif %}
                 {%  if  app.user==null %}
