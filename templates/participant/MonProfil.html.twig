@@ -1,28 +1,25 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div>
-        {{ form_start(participantForm) }}
 
-            {{ form_row(participantForm.pseudo) }}
-            {{ form_row(participantForm.prenom) }}
-            {{ form_row(participantForm.nom) }}
-            {{ form_row(participantForm.telephone) }}
-            {{ form_row(participantForm.email) }}
-            {{ form_row(participantForm.plainPassword) }}
-            {{ form_row(participantForm.campus) }}
-            {{ form_row(participantForm.photo) }}
-        <button type="submit" class="btn">Modifier </button>
-        <a href="{{ path('participant_supprimer', {'participant': app.user.id }) }}" > <button class="btn">Supprimer mon compte</button> </a>
+           {% if app.user.photo != null %}
+               Photo : <img src="{{ app.user.photo }}" alt="photo de profil de {{ app.user.pseudo }} "> <br>
+           {% endif %}
+        <div>
+               <p>
+              Pseudo  : {{ app.user.pseudo }} <br>
+              Prénom : {{ app.user.prenom }} <br>
+              Nom : {{ app.user.nom }} <br>
+              Téléphone : {{ app.user.telephone }} <br>
+              Email : {{ app.user.email }} <br>
+              Campus : {{ app.user.campus.nom }} <br>
 
-        {{ form_end(participantForm) }}
+           </p>
+           <a href="{{ path('participant_modifier', {'participant': app.user.id }) }}" > <button class="btn">Modifier mes informations</button> </a>
+       </div>
 
-
-    </div>
-
-{% endblock %}
-
-{% block title %}
 
 {% endblock %}
+
+
 

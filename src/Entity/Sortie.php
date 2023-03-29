@@ -46,7 +46,7 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
-    #[ORM\ManyToOne(inversedBy: 'SortiesOrganisees')]
+    #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
 
