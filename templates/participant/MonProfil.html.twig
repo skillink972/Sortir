@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+           {% if app.user.photo != null %}
+               Photo : <img src="{{ app.user.photo }}" alt="photo de profil de {{ app.user.pseudo }} "> <br>
+           {% endif %}
+        <div>
+               <p>
+              Pseudo  : {{ app.user.pseudo }} <br>
+              Prénom : {{ app.user.prenom }} <br>
+              Nom : {{ app.user.nom }} <br>
+              Téléphone : {{ app.user.telephone }} <br>
+              Email : {{ app.user.email }} <br>
+              Campus : {{ app.user.campus.nom }} <br>
+
+           </p>
+           <a href="{{ path('participant_modifier', {'participant': app.user.id }) }}" > <button class="btn">Modifier mes informations</button> </a>
+       </div>
+
+
+{% endblock %}
+
+
+

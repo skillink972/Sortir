@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\PropertySearch;
 use App\Entity\Sortie;
+use App\Form\SearchSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,33 +14,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/sortie', name:'sortie')]
 class SortieController extends AbstractController
 {
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/afficher', name: '_afficher')]
     public function afficher(
-        SortieRepository $sortieRepository
+        Request $request,
+        SortieRepository $sortieRepository,
+        ParticipantRepository $participantRepository
     ):Response
     {
-        $sortiesDontJeSuisOrganisateur = $sortieRepository->findBy(
+        $search = new PropertySearch();
+        $userConnecte = $participantRepository->findOneBy(
             [
-                "organisateur" => $this->getUser()->getUserIdentifier()
+                'id' => $this->getUser()
             ]
         );
-        $sortiesAuxquellesJeSuisInscrit = $sortieRepository->findBy(
-            [
-                "participants" => $this->getUser()->getUserIdentifier()
-            ]
+        $search->setCampus($userConnecte->getCampus());
+        $search->setUser($userConnecte);
+        $searchForm = $this->createForm(SearchSortieType::class, $search);
+        $searchForm->handleRequest($request);
+        $sorties = $sortieRepository->findSearch($search);
+        return $this->render('sortie/afficher.html.twig',
+            compact('searchForm', 'sorties')
         );
-        $sortiesAuxquellesJeNeSuisPasInscrit = $sortieRepository->findBy(
-            [
-
-            ]
-        );
-
-        return $this->render('sortie/afficher.html.twig');
     }
 
     #[Route('/CreeSortie', name: 'CreeSortie')]
@@ -75,7 +79,16 @@ if($SortieForm->isSubmitted() && $SortieForm->isValid()) {
     }
 }
         return $this->render('cree_sortie/index.html.twig',
-            compact('SortieForm')
+
+    #[Route('/creer', name: '_creer')]
+    public function creer(): Response
+    {
+        $sortie = new Sortie();
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+
+        return $this->render('sortie/creer.html.twig',
+            compact('sortieForm')
+
         );
     }
 

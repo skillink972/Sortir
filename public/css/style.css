@@ -111,3 +111,25 @@ main a {
 div.register {
     text-align : center;
 }
+
+/**
+page /sortie/afficher
+*/
+
+/*.filtres {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    width: 50%;*/
+/*}*/
+
+table, th, td {
+    border: 1px solid black;
+}
+table {
+    border-collapse: collapse;
+}
+td, th {
+    text-align: center;
+    padding: 5px;
+}
+
