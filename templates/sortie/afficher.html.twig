@@ -2,25 +2,13 @@
 
 {% block body %}
 <section>
-    <div class="filtres">
-        <label for="campus">Campus</label>
-        <input type="text" id="campus" value="{{ app.user.campus.nom }}">
-        <label for="search">Recherche par mot clé</label>
-        <input type="search" id="search">
-        <label for="dateDebut">Entre</label>
-        <input type="date" id="dateDebut">
-        <label for="dateFin">et</label>
-        <input type="date" id="dateFin">
-        <label for="sortiesOrga">Sorties dont je suis l'organisateur/rice</label>
-        <input type="checkbox" id="sortiesOrga">
-        <label for="sortiesInscrit">Sorties auxquelles je suis inscrit/e</label>
-        <input type="checkbox" id="sortiesInscrit">
-        <label for="sortiesNonInscrit">Sorties auxquelles je ne suis pas inscrit/e</label>
-        <input type="checkbox" id="sortiesNonInscrit">
-        <label for="sortiesPassees">Sorties passées</label>
-        <input type="checkbox" id="sortiesPassees">
-        <input type="submit" id="rechercher" value="Rechercher">
+    <div class="container">
+         {{ form_start(searchForm) }}
+        {{ form_widget(searchForm) }}
+        <button>Rechercher</button>
+        {{ form_end(searchForm) }}
     </div>
+
     <table>
         <thead>
             <tr>
@@ -43,9 +31,9 @@
                     <td>{{ sortie.participants.count()}}/{{ sortie.nbreInscritsMax }}</td>
                     <td>{{ sortie.etat.libelle}}</td>
                     <td>
-{#                        {% if (sortie.nom is same as(app.user.sortiesParticipees.nom)) %}#}
-{#                            x#}
-{#                        {% endif %}#}
+                        {% if (sortie is same as(app.user.sortiesParticipees)) %}
+                            x
+                        {% endif %}
                     </td>
                     <td>{{ sortie.organisateur.pseudo}}</td>
                     <td>liens</td>

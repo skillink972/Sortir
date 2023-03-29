@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\PropertySearch;
 use App\Entity\Sortie;
+use App\Form\SearchSortieType;
 use App\Form\SortieType;
+use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -17,28 +21,24 @@ class SortieController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/afficher', name: '_afficher')]
     public function afficher(
-        SortieRepository $sortieRepository
+        Request $request,
+        SortieRepository $sortieRepository,
+        ParticipantRepository $participantRepository
     ):Response
     {
-        $sorties = $sortieRepository->findAll();
-//        $sortiesDontJeSuisOrganisateur = $sortieRepository->findBy(
-//            [
-//                "organisateur" => $this->getUser()->getUserIdentifier()
-//            ]
-//        );
-//        $sortiesAuxquellesJeSuisInscrit = $sortieRepository->findBy(
-//            [
-//                "participants" => $this->getUser()->getUserIdentifier()
-//            ]
-//        );
-//        $sortiesAuxquellesJeNeSuisPasInscrit = $sortieRepository->findBy(
-//            [
-//
-//            ]
-//        );
-
+        $search = new PropertySearch();
+        $userConnecte = $participantRepository->findOneBy(
+            [
+                'id' => $this->getUser()
+            ]
+        );
+        $search->setCampus($userConnecte->getCampus());
+        $search->setUser($userConnecte);
+        $searchForm = $this->createForm(SearchSortieType::class, $search);
+        $searchForm->handleRequest($request);
+        $sorties = $sortieRepository->findSearch($search);
         return $this->render('sortie/afficher.html.twig',
-            compact('sorties')
+            compact('searchForm', 'sorties')
         );
     }
 
