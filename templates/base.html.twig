@@ -23,18 +23,15 @@
             <ul style="list-style-type:none;"  >
                 <li ><a class= "link" href="{{ path ('main_index') }}">Accueil</a></li>
                 {% if app.user %}
-                   {#  <li ><a class= "link" href="{{ path ('main_wish') }}">Mon profil</a></li> #}
-                    <li>Bonjour {{ app.user.pseudo }} :-) </li>
-
-                    <li ><a class= "link" href="{{ path ('sortieCreeSortie') }}">Crée une sortie</a></li>
-                    <li ><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
-{#                  <li ><a class= "link" href="{{ path ('CreeSortie') }}">Crée une sortie</a></li>#}
-
-                    <li ><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
-                    <li>Bonjour {{ app.user.pseudo }} :-) </li>
-                {%  elseif  app.user==null %}
-                    <li ><a class= "link" href="{{ path ('app_register') }}">Créer un compte</a></li>
-                    <li ><a class= "link" href="{{ path ('app_login') }}">Se connecter</a></li>
+                    <li><a class= "link" href="{{ path ('sortie_afficher') }}">Liste des sorties</a></li>
+                    <li><a class= "link" href="{{ path ('sortie_creer') }}">Crée une sortie</a></li>
+                    <li><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
+                    <li> Bonjour {{ app.user.pseudo }} :-) </li>
+                    <li><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
+                {% endif %}
+                {%  if  app.user==null %}
+                    <li><a class= "link" href="{{ path ('app_register') }}">Créer un compte</a></li>
+                    <li><a class= "link" href="{{ path ('app_login') }}">Se connecter</a></li>
                 {% endif %}
             </ul>
         </nav>
