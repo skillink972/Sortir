@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MainController extends AbstractController
 {
-    #[Route('/', name: 'app_main')]
+    #[Route('/', name: 'main_index')]
     public function index(): Response
     {
         return $this->render('main/index.html.twig', [
@@ -20,9 +20,12 @@ class MainController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/MonProfil', name: 'app_MonProfil')]
     public function MonProfil(): Response
-    {
-        return $this->render('main/MonProfil.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        return $this->render('main/index.html.twig');
     }
+    #[Route('/participant', name: 'main_participant')]
+    public function participant(): Response
+    {
+        return $this->render('participant/ModifierMonProfil.html.twig');
+    }
+
 }
