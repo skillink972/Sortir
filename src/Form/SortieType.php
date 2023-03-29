@@ -23,6 +23,11 @@ class SortieType extends AbstractType
             ->add('duree')
             ->add('dateLimiteInscription')
             ->add('nbreInscritsMax')
+            ->add('lieu')
+            ->add('etat')
+            ->add('campus')
+            ->add('organisateur')
+            ->add('participants')
             ->add('lieu',EntityType::class,
     [
         'class' => Lieu::class,
