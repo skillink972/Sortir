@@ -39,8 +39,8 @@ class ParticipantController extends AbstractController
     )]
     public function _AutreProfil(
 
-        ParticipantRepository  $participantRepository,
-        Participant $participant
+        Participant $participant,
+        ParticipantRepository  $participantRepository
 
     ): Response
     {
