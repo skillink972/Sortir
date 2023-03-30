@@ -3,7 +3,7 @@
 {% block body %}
 
            {% if app.user.photo != null %}
-               Photo : <img src="{{ app.user.photo }}" alt="photo de profil de {{ app.user.pseudo }} "> <br>
+               <img src="{{ asset('photos_utilisateurs/'~app.user.photo) }}" alt="photo de profil de {{ app.user.pseudo }} "> <br><br>
            {% endif %}
         <div>
                <p>
