@@ -36,15 +36,13 @@ class SearchSortieType extends AbstractType
                 [
                     'label'         => 'Entre',
                     'required'      => false,
-                    'widget'        => 'single_text',
-                    'attr'          => ['class' => 'js-datepicker']
+                    'widget'        => 'single_text'
                 ])
             ->add('dateMax',DateType::class,
                 [
                     'label'         => 'et',
                     'required'      => false,
-                    'widget'        => 'single_text',
-                    'attr'          => ['class' => 'js-datepicker']
+                    'widget'        => 'single_text'
                 ])
             ->add('organisateur', CheckboxType::class,
                 [
