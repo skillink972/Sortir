@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use function Sodium\add;
 
 #[Route('/sortie', name:'sortie')]
 class SortieController extends AbstractController
@@ -38,7 +39,101 @@ class SortieController extends AbstractController
         $search->setUser($userConnecte);
         $searchForm = $this->createForm(SearchSortieType::class, $search);
         $searchForm->handleRequest($request);
-        $sorties = $sortieRepository->findSearch($search);
+        $sortiesO = $sortieRepository->findSearch1($search);
+        $sortiesI = $sortieRepository->findSearch2($search);
+        $sortiesN = $sortieRepository->findSearch3($search);
+        dump($sortiesN);
+        $sortiesP = $sortieRepository->findSearch4($search);
+        $sortiesOI = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search));
+        $sortiesON = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch3($search));
+        $sortiesOP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch4($search));
+        $sortiesIN = array_merge($sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search));
+        $sortiesIP = array_merge($sortieRepository->findSearch2($search),$sortieRepository->findSearch4($search));
+        $sortiesNP = array_merge($sortieRepository->findSearch3($search),$sortieRepository->findSearch4($search));
+        $sortiesOIN = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search), $sortieRepository->findSearch3($search));
+        $sortiesOIP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search), $sortieRepository->findSearch4($search));
+        $sortiesONP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
+        $sortiesINP = array_merge($sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
+        $sortiesOINP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
+
+        $sorties = $sortiesOIN;
+        if ($search->isOrganisateur()) {
+            if ($search->isInscrit()) {
+                if ($search->isNonInscrit()) {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesOINP;
+                    }
+                    else {
+                        $sorties = $sortiesOIN;
+                    }
+                }
+                else {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesOIP;
+                    }
+                    else {
+                        $sorties = $sortiesOI;
+                    }
+                }
+            }
+            else {
+                if ($search->isNonInscrit()) {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesONP;
+                    }
+                    else {
+                        $sorties = $sortiesON;
+                    }
+                }
+                else {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesOP;
+                    }
+                    else {
+                        $sorties = $sortiesO;
+                    }
+                }
+            }
+        }
+        else {
+            if ($search->isInscrit()) {
+                if ($search->isNonInscrit()) {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesINP;
+                    }
+                    else {
+                        $sorties = $sortiesIN;
+                    }
+                }
+                else {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesIP;
+                    }
+                    else {
+                        $sorties = $sortiesI;
+                    }
+                }
+            }
+            else {
+                if ($search->isNonInscrit()) {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesNP;
+                    }
+                    else {
+                        $sorties = $sortiesN;
+                    }
+                }
+                else {
+                    if ($search->isPassees()) {
+                        $sorties = $sortiesP;
+                    }
+                    else {
+                        $sorties = $sortiesI;
+                    }
+                }
+            }
+        }
+
         return $this->render('sortie/lister.html.twig',
             compact('searchForm', 'sorties')
         );
@@ -99,22 +194,22 @@ class SortieController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/participer/{sortie}', name:'_participer')]
+    #[Route('/participer/{sortie}', name: '_participer')]
     public function participer(
-        Sortie $sortie,
-        ParticipantRepository $participantRepository,
+        Sortie                 $sortie,
+        ParticipantRepository  $participantRepository,
         EntityManagerInterface $entityManager
     ): Response
     {
         $participant = $participantRepository->findOneBy(
             [
-            "email" => $this->getUser()->getUserIdentifier()
+                "email" => $this->getUser()->getUserIdentifier()
             ]
         );
         if (!$sortie) {
             throw $this->createNotFoundException('Cette sortie n\'existe pas');
         }
-        if ($sortie->getParticipants()->count()<$sortie->getNbreInscritsMax() && $sortie->getEtat()->getId()==2 ) {
+        if ($sortie->getParticipants()->count() < $sortie->getNbreInscritsMax() && $sortie->getEtat()->getId() == 2) {
             try {
                 $sortie->addParticipant($participant);
                 $entityManager->persist($sortie);
@@ -125,12 +220,43 @@ class SortieController extends AbstractController
                 $this->addFlash('msgError', "Vous ne pouvez pas vous inscrire à cette sortie car le nombre maximum de participants est atteint.");
                 return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
             }
-        }
-        else {
+        } else {
             $this->addFlash('msgError', "Vous ne pouvez pas vous inscrire à cette sortie car le nombre maximum de participants est atteint.");
         }
-        return $this->render('sortie/participer.html.twig',
-            compact('sortie')
-        );
+        return $this->render('sortie/lister.html.twig');
     }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/seDesister/{sortie}', name: '_seDesister')]
+    public function seDesister(
+        Sortie                 $sortie,
+        ParticipantRepository  $participantRepository,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $participant = $participantRepository->findOneBy(
+            [
+                "email" => $this->getUser()->getUserIdentifier()
+            ]
+        );
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+        foreach ($participant->getSortiesParticipees() as $sortieParticipee) {
+            if ($sortieParticipee === $sortie) {
+                try {
+                    $sortie->removeParticipant($participant);
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+                    $this->addFlash('msgSucces', "Vous êtes désinscrit de la sortie.");
+                    return $this->redirectToRoute('sortie_lister');
+                } catch (\Exception $e) {
+                    $this->addFlash('msgError', "Erreur lors de la désinscription");
+                    return $this->redirectToRoute('sortie_lister');
+                }
+            }
+        }
+        return $this->render('sortie/lister.html.twig');
+    }
+
 }

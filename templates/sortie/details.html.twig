@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h3>Détails de la sortie {{ sortie.nom }}</h3>
+<h3>Détails de la sortie {{ sortie.nom }} ({{ sortie.etat.libelle }})</h3>
     <p>
         Date et heure de la sortie : {{ sortie.dateHeureDebut | date ('d/m/y H:i') }} <br>
         Date limite d'inscription : {{ sortie.dateLimiteInscription | date ('d/m/y H:i') }} <br>
@@ -48,7 +48,16 @@
             {% endfor %}
         </tbody>
     </table>
-
+    <br>
+    {% if app.user in sortie.participants %}
+        <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
+    {% else %}
+        {% if sortie.etat.id is same as (2) %}
+            {% if sortie.organisateur.id is not same as (app.user.id) %}
+                <a href="{{ path("sortie_participer", {"sortie": sortie.id}) }}">S'inscrire</a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block title %}

@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityPaginatorInterface;
+use function Doctrine\ORM\QueryBuilder;
 use function Symfony\Component\String\s;
 
 /**
@@ -43,16 +44,17 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+
     /**
-     * Récupère les sorties en lien avec une recherche
-     * @return Sortie[]
+     * Requête de base : filtres campus, mot clé, date min et date max
+     * @param PropertySearch $search
+     * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findSearch(PropertySearch $search) : array
+    public function getBuilder(PropertySearch $search): \Doctrine\ORM\QueryBuilder
     {
         $query = $this
             ->createQueryBuilder('s')
             ->select('s');
-
 
         if ($search->getCampus()) {
             $query = $query
@@ -61,7 +63,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('campus', $search->getCampus()->getNom());
         }
 
-        if ($search->getMotCle()!==null) {
+        if ($search->getMotCle() !== null) {
             $query = $query
                 ->andWhere('s.nom LIKE :motCle')
                 ->setParameter('motCle', "%{$search->getMotCle()}%");
@@ -78,93 +80,100 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('s.dateHeureDebut <= :dateMax')
                 ->setParameter('dateMax', $search->getDateMax());
         }
+        return $query;
+    }
+
+    /**
+     * Requête liée aux sorties dont je suis l'organisateur/rice
+     * @return Sortie[]
+     */
+    public function findSearch1(PropertySearch $search) : array
+    {
+        $query = $this->getBuilder($search);
 
         if ($search->isOrganisateur()) {
-            $query1 = $query
+            $query = $query
                 ->innerJoin('s.organisateur', 'o')
                 ->andWhere('o.id LIKE :user')
                 ->setParameter('user', $search->getUser()->getId());
         }
-        else {
-            $query1 = $query
-                ->innerJoin('s.organisateur', 'o')
-                ->andWhere('o.id NOT LIKE :user')
+
+        return $query->getQuery()->getResult() ;
+    }
+
+    /**
+     * Requête liée aux sorties auxquelles je suis inscrit/e
+     * @return Sortie[]
+     */
+    public function findSearch2(PropertySearch $search) : array
+    {
+        $query = $this->getBuilder($search);
+
+        if ($search->isInscrit()) {
+            $query = $query
+                ->innerJoin('s.participants', 'pi')
+                ->andWhere('pi.id LIKE :user')
                 ->setParameter('user', $search->getUser()->getId());
         }
-//
-//        if ($search->isInscrit()) {
-//            $query2 = $query
-//                ->innerJoin('s.participants', 'pi')
-//                ->andWhere('pi.id LIKE :user')
-//                ->setParameter('user', $search->getUser()->getId());
-//        }
-//        else {
-//            $query2 = $query
-//                ->innerJoin('s.participants', 'pi')
-//                ->andWhere('pi.id NOT LIKE :user')
-//                ->setParameter('user', $search->getUser()->getId());
-//        }
-//
-//        if ($search->isNonInscrit()) {
-//            $query3 = $query
-//                ->innerJoin('s.participants', 'pni')
-//                ->andWhere('pni.id NOT LIKE :user')
-//                ->setParameter('user', '6');
-//        }
-//        else {
-//            $query3 = $query
-//                ->innerJoin('s.participants', 'pni')
-//                ->andWhere('pni.id LIKE :user')
-//                ->setParameter('user', '6');
-//        }
-//
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Requête liée aux sorties auxquelles je ne suis pas inscrit/e
+     * @return Sortie[]
+     */
+    public function findSearch3(PropertySearch $search) : array
+    {
+        $query = $this->getBuilder($search);
+
+        if ($search->isNonInscrit()) {
+            $qb = $this
+                ->createQueryBuilder('s1')
+                ->select('s1');
+            $q = $qb
+                ->innerJoin('s1.participants', 'pi')
+                ->andWhere('pi.id LIKE :user')
+                ->setParameter('user', $search->getUser()->getId());
+            $qb2 = $this
+                ->createQueryBuilder('s2')
+                ->select('s2');
+            $q2 = $qb2
+                ->innerJoin('s2.etat', 'e')
+                ->andWhere('e.id = 5');
+            $qb3 = $this
+                ->createQueryBuilder('s3')
+                ->select('s3');
+            $q3 = $qb3
+                ->innerJoin('s3.organisateur', 'o')
+                ->andWhere('o.id LIKE :user')
+                ->setParameter('user', $search->getUser()->getId());
+            $query = $query
+                ->andWhere($query->expr()->notIn('s',$q->getDQL()))
+                ->andWhere($query->expr()->notIn('s',$q2->getDQL()))
+                ->andWhere($query->expr()->notIn('s',$q3->getDQL()))
+                ->setParameter('user', $search->getUser());
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Requête liée aux sorties passées
+     * @return Sortie[]
+     */
+    public function findSearch4(PropertySearch $search) : array
+    {
+        $query = $this->getBuilder($search);
+
         if ($search->isPassees()) {
-            $query4 = $query
+            $query = $query
                 ->innerJoin('s.etat', 'e')
                 ->andWhere('e.id = 5');
         }
-        else {
-            $query4 = $query
-                ->innerJoin('s.etat', 'e')
-                ->andWhere('e.id != 5');
-        }
 
-//       + $query2->getQuery()->getResult() + $query3->getQuery()->getResult()
-        $allQueries = $query->getQuery()->getResult() + $query1->getQuery()->getResult() + $query4->getQuery()->getResult();
-        return $allQueries ;
+        return $query->getQuery()->getResult();
     }
 
 
-//    /**
-
-//     * @return Sortie[] Returns an array of Sortie objects
-
-//     * @return SortieController[] Returns an array of SortieController objects
-
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-
-//    public function findOneBySomeField($value): ?Sortie
-
-//    public function findOneBySomeField($value): ?SortieController
-
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section>
-    <div class="filtres">
-         {{ form_start(searchForm) }}
-        {{ form_widget(searchForm) }}
-        <button>Rechercher</button>
-        {{ form_end(searchForm) }}
-    </div>
-
-    <table>
-        <thead>
+    <section>
+        <div class="filtres">
+            {{ form_start(searchForm) }}
+            {{ form_widget(searchForm) }}
+            <button>Rechercher</button>
+            {{ form_end(searchForm) }}
+        </div>
+        <br>
+        <table>
+            <thead>
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
@@ -21,38 +21,41 @@
                 <th>Organisateur</th>
                 <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for sortie in sorties %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut | date ('d/m/y H:i')}}</td>
-                    <td>{{ sortie.dateLimiteInscription | date ('d/m/y H:i')}}</td>
-                    <td>{{ sortie.participants.count()}}/{{ sortie.nbreInscritsMax }}</td>
-                    <td>{{ sortie.etat.libelle}}</td>
+                    <td>{{ sortie.dateHeureDebut | date ('d/m/y H:i') }}</td>
+                    <td>{{ sortie.dateLimiteInscription | date ('d/m/y H:i') }}</td>
+                    <td>{{ sortie.participants.count() }}/{{ sortie.nbreInscritsMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
                     <td>
-                        {% if (sortie is same as(app.user.sortiesParticipees)) %}
-                            x
-                        {% endif %}
+                        {% for sp in app.user.sortiesParticipees %}
+                            {% if (sortie is same as(sp)) %}
+                                x
+                            {% endif %}
+                        {% endfor %}
                     </td>
+                    <td>{{ sortie.organisateur.pseudo }}</td>
                     <td>
                         <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo}}</a>
                     </td>
                     <td>
                         <a href="{{ path ('sortie_details', {'sortie': sortie.id}) }}">Afficher</a>
-                        <a href="{{ path('sortie_participer', {'sortie': sortie.id}) }}">S'inscrire</a>
+                        {% if app.user in sortie.participants %}
+                            <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
+                        {% else %}
+                            {% if sortie.etat.id is same as (2) %}
+                                {% if sortie.organisateur.id is not same as (app.user.id) %}
+                                    <a href="{{ path("sortie_participer", {"sortie": sortie.id}) }}">S'inscrire</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</section>
-    <script>
-        $(document).ready(function() {
-            // you may need to change this code if you are not using Bootstrap Datepicker
-            $('.js-datepicker').datepicker({
-                format: 'd/m/Y'
-            });
-        });
-    </script>
+            </tbody>
+        </table>
+    </section>
 {% endblock %}
