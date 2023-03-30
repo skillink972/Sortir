@@ -28,6 +28,9 @@
                     <li><a class= "link" href="{{ path ('sortie_creer') }}">Créer une sortie</a></li>
                     <li><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
                     <li><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
+                    {% if app.user.admin == true %}
+                        <li><a class= "link" href="{{ path ('admin') }}">Tableau de bord</a></li>
+                    {% endif %}
                     <li> Bonjour {{ app.user.pseudo }} :-) </li>
                 {% endif %}
                 {%  if  app.user==null %}
