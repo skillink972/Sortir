@@ -5,7 +5,7 @@
     <div>
         <p>
             {% if autreProfil.photo != null %}
-            Photo : <img src="{{ autreProfil.photo }}" alt="photo de profil de {{ autreProfil.pseudo }} "> <br>
+                <img src="{{ asset('photos_utilisateurs/'~autreProfil.photo) }}" alt="photo de profil de {{ autreProfil.pseudo  }} "> <br><br>
             {% endif %}
             Pseudo  : {{ autreProfil.pseudo }} <br>
             Prénom : {{ autreProfil.prenom }} <br>
@@ -13,8 +13,9 @@
             Téléphone : {{ autreProfil.telephone }} <br>
             Email : {{ autreProfil.email }} <br>
             Campus : {{ autreProfil.campus.nom }} <br>
-
         </p>
+
+        <a href="{{  path ('sortie_lister') }}">Retour</a>
     </div>
 
 {% endblock %}

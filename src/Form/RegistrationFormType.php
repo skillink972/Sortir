@@ -4,9 +4,11 @@ namespace App\Form;
 
 use App\Entity\Campus;
 use App\Entity\Participant;
+use File;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -70,10 +72,12 @@ class RegistrationFormType extends AbstractType
                 'expanded' => true,
                 'label' => 'Campus : '
             ])
-            ->add('photo',null,[
-                'label' => 'Photo : '
+            ->add('profilePicture', FileType::class, [
+                'label' => 'Photo de profil (JPEG ou PNG)',
+                'mapped' => false,
+                'required' => false,
 
-            ])
+            ]);
 
         ;
     }

@@ -28,3 +28,5 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+/public/photos_utilisateurs/
