@@ -34,7 +34,15 @@
         <tbody>
             {% for participant in sortie.participants %}
                 <tr>
-                    <td>{{ participant.pseudo }}</td>
+                    {% if app.user is same as participant %}
+                    <td>
+                        <a href="{{ path('participant_MonProfil') }}">{{ participant.pseudo}}</a>
+                    </td>
+                        {% else %}
+                    <td>
+                        <a href="{{ path('participant_Autreprofil',{'participant': participant.id})  }}">{{ participant.pseudo}}</a>
+                    </td>
+                     {% endif %}
                     <td>{{ participant.prenom }} {{ participant.nom }}</td>
                 </tr>
             {% endfor %}
