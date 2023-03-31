@@ -33,45 +33,33 @@ class SortieType extends AbstractType
                 'class' => Ville::class,
                 'choice_label' => 'nom',
             ])
-            ->add('lieu', EntityType::class, [
-                'class' => Lieu::class,
-                'choice_label' => 'nom',
-            ]);
 
-        $builder->get('ville')->addEventListener(
+            /*
+            $builder->get('ville')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($builder) {
-                $Sortie = $event->getForm();
-                $ville = $Sortie->getData();
+            function (FormEvent $event){
+            $form = $event->getForm();
+            dump($form);
+            $form->getParent()->add('lieu',EntityType::class, [
+            'class' => Lieu::class,
+            'placeholder' => 'Sélectionnez un lieu',
+            'choice_label' => 'nom',
+            $query = $form->createQueryBuilder('l')
+            ->where('l.ville = :paramVille')
+            ->setParameter('paramVille',)
 
-                $builder->get('lieu')->resetViewTransformers();
-                $builder->add('lieu', EntityType::class, [
+            ]);
+            }
+            );
+            */
+            ->add('lieu',EntityType::class,
+                [
                     'class' => Lieu::class,
                     'choice_label' => 'nom',
-                    'query_builder' => function (EntityRepository $er) use ($ville) {
-                        return $er->createQueryBuilder('l')
-                            ->where('l.ville = :ville')
-                            ->setParameter('ville', $ville);
-                    },
-                ]);
-            }
-        )
-
-
-            ->add('lieu')
-            ->add('etat')
-            ->add('campus')
-            ->add('organisateur')
-            ->add('participants')
-            ->add('lieu',EntityType::class,
-    [
-        'class' => Lieu::class,
-        'choice_label' => 'nom',
-    ])
+                ])
 
         ;
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

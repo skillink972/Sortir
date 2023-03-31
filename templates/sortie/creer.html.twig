@@ -11,4 +11,20 @@
     <button type="button" class="btn">Annuler</button>
     <button type="submit" class="btn">Créer sortie</button>
     {{ form_end(SortieForm) }}
+
+    <script>
+        var $sortie_ville = $("#sortie_ville")
+        var $token = $("#sortie_token")
+        $sortie_ville.change(function(){
+            var $form =$(this).closest("form")
+            var data =  {}
+            data[$token.attr("²")] = $token.val()
+            data[$sortie_ville.attr("nom")] = $sortie_ville.val()
+            $.post($form.attr("action"),data).then(function (response){
+              $("#sortie_lieu").replaceWith(
+                  $(response).find("#sortie_lieu")
+              )
+            })
+        })
+    </script>
 {% endblock %}
