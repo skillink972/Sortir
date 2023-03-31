@@ -52,7 +52,10 @@
             "symfony/runtime": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.3"
+        }
     },
     "autoload": {
         "psr-4": {
