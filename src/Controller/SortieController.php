@@ -194,6 +194,84 @@ class SortieController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
+    #[Route('/annuler/{sortie}',
+        name: '_annuler',
+        requirements: ['id' => '\d+'])]
+    public function annuler(
+        Sortie                 $sortie,
+        EntityManagerInterface $entityManager
+
+    ): Response
+    {
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+
+
+        if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 )) {
+            try {
+                //TODO il ne faut pas supprimer la sortie mais set son Etat sur 6
+                $entityManager->remove($sortie);
+                $entityManager->flush();
+                $this->addFlash('msgSucces', "Votre sortie a bien été supprimée.");
+                return $this->redirectToRoute('sortie_lister');
+            } catch (\Exception $e) {
+                $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            }
+        }
+
+        return $this->render('sortie/details.html.twig',compact('sortie'));
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/modifier/{sortie}',
+        name: '_modifier',
+        requirements: ['id' => '\d+'])]
+    public function modifier(
+        Sortie                 $sortie,
+        Request                $request,
+        EntityManagerInterface $entityManager
+
+    ): Response
+    {
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+
+
+        if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 ) ) {
+            try {
+                $SortieForm = $this->createForm(SortieType::class, $sortie);
+                $SortieForm->handleRequest($request);
+
+
+                if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
+                    try {
+                        //TODO mettre le même formulaire que celui de la méthode créer
+                        //TODO aller dans le TWIG lister et remplacer le lien "annuler" par "modifier"
+                        //TODO mettre un bouton/lien avec la route annuler sortie sur le TWIG modifier_une_sortie
+
+                    } catch (\Exception $exception) {
+                        $this->addFlash('echec', 'La sortie n\'a pas pu être modifiée :(');
+                        return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+                    }
+
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+                    $this->addFlash('msgSucces', "Votre sortie a bien été modifiée.");
+                    return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            }
+            }
+            catch (\Exception $e) {
+                $this->addFlash('msgError', "Votre sortie n'a pas pu être modifiée.");
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            }
+        }
+        return $this->render('sortie/details.html.twig');
+    }
+
+    #[IsGranted('ROLE_USER')]
     #[Route('/participer/{sortie}', name: '_participer')]
     public function participer(
         Sortie                 $sortie,
