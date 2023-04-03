@@ -199,7 +199,8 @@ class SortieController extends AbstractController
         requirements: ['id' => '\d+'])]
     public function annuler(
         Sortie                 $sortie,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Request                $request,
 
     ): Response
     {
@@ -210,18 +211,22 @@ class SortieController extends AbstractController
 
         if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 )) {
             try {
-                //TODO il ne faut pas supprimer la sortie mais set son Etat sur 6
-                $entityManager->remove($sortie);
-                $entityManager->flush();
-                $this->addFlash('msgSucces', "Votre sortie a bien été supprimée.");
-                return $this->redirectToRoute('sortie_lister');
+                $SortieForm = $this->createForm(SortieType::class, $sortie);
+                $SortieForm->handleRequest($request);
+                if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
+                    $sortie->setEtat(6);
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+                    $this->addFlash('msgSucces', "Votre sortie a bien été annulée. Elle reste consultable 1 mois sur le site");
+                    return $this->redirectToRoute('sortie_lister');
+                }
             } catch (\Exception $e) {
                 $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
                 return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
             }
         }
 
-        return $this->render('sortie/details.html.twig',compact('sortie'));
+        return $this->render('sortie/details.html.twig',compact('sortie','SortieForm'));
     }
 
     #[IsGranted('ROLE_USER')]
