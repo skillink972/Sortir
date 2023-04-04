@@ -220,6 +220,7 @@ class SortieController extends AbstractController
         Sortie                 $sortie,
         EntityManagerInterface $entityManager,
         Request                $request,
+        EtatRepository         $etatRepository
 
     ): Response
     {
@@ -229,11 +230,16 @@ class SortieController extends AbstractController
 
 
         if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 )) {
+
             try {
                 $SortieForm = $this->createForm(SortieType::class, $sortie);
                 $SortieForm->handleRequest($request);
+
+
+
                 if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
-                    $sortie->setEtat(6);
+
+                    $sortie->setEtat($etatRepository->find(6));
                     $entityManager->persist($sortie);
                     $entityManager->flush();
                     $this->addFlash('msgSucces', "Votre sortie a bien été annulée. Elle reste consultable 1 mois sur le site");
@@ -243,9 +249,10 @@ class SortieController extends AbstractController
                 $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
                 return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
             }
+            return $this->render('sortie/supprimer.html.twig', compact('SortieForm', 'sortie'));
         }
 
-        return $this->render('sortie/details.html.twig',compact('sortie','SortieForm'));
+        return $this->render('sortie/details.html.twig',compact('sortie'));
     }
 
     #[IsGranted('ROLE_USER')]
@@ -265,35 +272,29 @@ class SortieController extends AbstractController
 
 
         if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 ) ) {
-            try {
-                $SortieForm = $this->createForm(SortieType::class, $sortie);
-                $SortieForm->handleRequest($request);
+
+            $SortieForm = $this->createForm(SortieType::class, $sortie);
+            $SortieForm->handleRequest($request);
 
 
-                if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
-                    try {
-                        //TODO mettre le même formulaire que celui de la méthode créer
-                        //TODO aller dans le TWIG lister et remplacer le lien "annuler" par "modifier"
-                        //TODO mettre un bouton/lien avec la route annuler sortie sur le TWIG modifier_une_sortie
-
-                    } catch (\Exception $exception) {
-                        $this->addFlash('echec', 'La sortie n\'a pas pu être modifiée :(');
-                        return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
-                    }
-
+            if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
+                try {
                     $entityManager->persist($sortie);
                     $entityManager->flush();
-                    $this->addFlash('msgSucces', "Votre sortie a bien été modifiée.");
+                    $this->addFlash('msgSucces', 'La sortie a été modifiée avec succès !');
                     return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+                } catch (\Exception $exception) {
+                    $this->addFlash('echec', 'La sortie n\'a pas pu être modifiée :(');
+                    return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+                }
+
             }
-            }
-            catch (\Exception $e) {
-                $this->addFlash('msgError', "Votre sortie n'a pas pu être modifiée.");
-                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
-            }
+            return $this->render('sortie/modifier.html.twig', compact('SortieForm', 'sortie'));
         }
-        return $this->render('sortie/details.html.twig');
-    }
+            return $this->render('sortie/modifier.html.twig', compact( 'sortie'));
+        }
+
+
 
     #[IsGranted('ROLE_USER')]
     #[Route('/participer/{sortie}', name: '_participer')]
