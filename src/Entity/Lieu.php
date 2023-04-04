@@ -3,34 +3,47 @@
 namespace App\Entity;
 
 use App\Repository\LieuRepository;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+
+$classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 class Lieu
 {
+    #[Groups(['group'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['group'])]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[Groups(['group'])]
     #[ORM\Column(length: 255)]
     private ?string $rue = null;
 
+    #[Groups(['group'])]
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
+    #[Groups(['group'])]
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
+    #[Groups(['group'])]
     #[ORM\ManyToOne(inversedBy: 'Lieux')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Ville $ville = null;
 
+    #[Groups(['group'])]
     #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: Sortie::class)]
     private Collection $Sorties;
 
@@ -130,7 +143,8 @@ class Lieu
                 $sorty->setLieu(null);
             }
         }
-
         return $this;
     }
+
+
 }

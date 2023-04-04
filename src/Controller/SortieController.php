@@ -1,20 +1,28 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\PropertySearch;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\SearchSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use function Sodium\add;
 
 #[Route('/sortie', name:'sortie')]
@@ -30,6 +38,8 @@ class SortieController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
+        $now = new \DateTime;
+        dump($now);
         $search = new PropertySearch();
         $userConnecte = $participantRepository->findOneBy(
             [
@@ -44,8 +54,6 @@ class SortieController extends AbstractController
         $sortiesO = $sortieRepository->findSearch1($search);
         $sortiesI = $sortieRepository->findSearch2($search);
         $sortiesN = $sortieRepository->findSearch3($search);
-        dump($sortiesN);
-
         $sortiesP = $sortieRepository->findSearch4($search);
         $sortiesOI = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search));
         $sortiesON = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch3($search));
@@ -59,7 +67,6 @@ class SortieController extends AbstractController
         $sortiesINP = array_merge($sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
         $sortiesOINP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
 
-        $sorties = $sortiesOIN;
         if ($search->isOrganisateur()) {
             if ($search->isInscrit()) {
                 if ($search->isNonInscrit()) {
@@ -136,50 +143,59 @@ class SortieController extends AbstractController
                 }
             }
         }
-
         return $this->render('sortie/lister.html.twig',
-            compact('searchForm', 'sorties')
+            compact('searchForm', 'sorties', 'now')
         );
     }
 
     #[IsGranted('ROLE_USER')]
+    #[Route('/recupererLieux/{ville}', name: '_recupererLieux')]
+    public function recupererLieux (
+        LieuRepository $lieuRepository,
+        string $ville,
+        SerializerInterface $serializer
+    ) : Response
+    {
+        $lieux = $lieuRepository->findBy(
+            [
+                'ville' => $ville
+            ]
+        );
+        $productSerialized = $serializer->serialize($lieux, 'json', ['groups' => ['group']]);
+
+        return new Response($productSerialized);
+    }
+
+    #[IsGranted('ROLE_USER')]
     #[Route('/creer', name: '_creer')]
-    public function nouveau(
-        EntityManagerInterface $entityManager,
-        ParticipantRepository  $participantRepository,
-        Request                $request,
-        EtatRepository         $etatRepository,
+    public function creer(
+        EntityManagerInterface  $entityManager,
+        ParticipantRepository   $participantRepository,
+        Request                 $request,
+        EtatRepository $etatRepository
     ): Response
     {
         $utilisateurConnecte = $participantRepository->findOneBy(["email" => $this->getUser()->getUserIdentifier()]);
-        $Sortie = new Sortie();
-        $SortieForm = $this->createForm(SortieType::class, $Sortie);
-        $SortieForm->handleRequest($request);
-        if ($SortieForm->isSubmitted() && $SortieForm->isValid()) {
+        $sortie = new Sortie();
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             try {
-                $Sortie->setNom(($Sortie->getNom()));
-                $Sortie->setInfoSortie(($Sortie->getInfoSortie()));
-                $Sortie->setDateHeureDebut(($Sortie->getDateHeureDebut()));
-                $Sortie->setDuree(($Sortie->getDuree()));
-                $Sortie->setDateLimiteInscription(($Sortie->getDateLimiteInscription()));
-                $Sortie->setNbreInscritsMax(($Sortie->getNbreInscritsMax()));
-                $Sortie->setLieu(($Sortie->getLieu()));
-                $etat = $etatRepository->findOneBy(["libelle" => 'en cours']);
-                $Sortie->setEtat($etat);
-                $Sortie->setCampus($utilisateurConnecte->getCampus());
-                $organistateur = $participantRepository->findOneBy(["nom" => $utilisateurConnecte->getnom()]);
-                $Sortie->setOrganisateur($organistateur);
-                $entityManager->persist($Sortie);
+                $organistateur = $participantRepository->findOneBy(["id" => $utilisateurConnecte->getId()]);
+                $sortie->setOrganisateur($organistateur);
+                $etat = $etatRepository->findOneBy(['id'=>2]);
+                $sortie->setEtat($etat);
+                $entityManager->persist($sortie);
                 $entityManager->flush();
+                $this->addFlash('msgSucces', 'La sortie a été créée avec succès !');
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
             } catch (\Exception $exception) {
-                $this->addFlash('echec', 'La sortie n\'a pas pu être crée :(');
-                return $this->redirectToRoute('sortie_creer');
+                $this->addFlash('msgError', 'La sortie n\'a pas pu être créée :( '.$exception);
+                return $this->render('sortie/creer.html.twig');
             }
-            return $this->render('sortie/creer.html.twig',
-                compact('SortieForm'));
         }
         return $this->render('sortie/creer.html.twig',
-            compact('SortieForm'));
+            compact('sortieForm', 'sortie'));
     }
 
     #[IsGranted('ROLE_USER')]
