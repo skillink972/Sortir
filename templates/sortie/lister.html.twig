@@ -49,10 +49,10 @@
                     {% endif %}
                     <td>
                         <a href="{{ path ('sortie_details', {'sortie': sortie.id}) }}">Afficher</a>
-                        {% if app.user in sortie.participants %}
+                        {% if (app.user in sortie.participants) and (sortie.etat.id is same as (2)) %}
                             <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
                         {% else %}
-                            {% if sortie.etat.id is same as (2) or (1) %}
+                            {% if sortie.etat.id is same as (2) %}
                                 {% if sortie.organisateur.id is not same as (app.user.id) %}
                                     <a href="{{ path("sortie_participer", {"sortie": sortie.id}) }}">S'inscrire</a>
                                 {% endif %}

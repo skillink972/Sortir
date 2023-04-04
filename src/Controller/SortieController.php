@@ -36,6 +36,7 @@ class SortieController extends AbstractController
                 'id' => $this->getUser()
             ]
         );
+
         $search->setCampus($userConnecte->getCampus());
         $search->setUser($userConnecte);
         $searchForm = $this->createForm(SearchSortieType::class, $search);
@@ -44,9 +45,7 @@ class SortieController extends AbstractController
         $sortiesI = $sortieRepository->findSearch2($search);
         $sortiesN = $sortieRepository->findSearch3($search);
         dump($sortiesN);
-        $connection = $entityManager->getConnection();
-        $statement = $connection->prepare('CALL archiver_sorties()');
-        $statement->executeStatement();
+
         $sortiesP = $sortieRepository->findSearch4($search);
         $sortiesOI = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search));
         $sortiesON = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch3($search));
