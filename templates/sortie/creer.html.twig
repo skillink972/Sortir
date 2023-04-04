@@ -6,25 +6,42 @@
 <div class="example-wrapper">
     <h1>Création d'une sortie</h1>
 </div>
-{{ form_start(SortieForm) }}
-    {{ form_widget(SortieForm) }}
-    <button type="button" class="btn">Annuler</button>
-    <button type="submit" class="btn">Créer sortie</button>
-    {{ form_end(SortieForm) }}
+{{ form_start(sortieForm) }}
+    {{ form_widget(sortieForm) }}
+    <button>Ajouter une sortie</button>
+    {{ form_end(sortieForm) }}
 
     <script>
-        var $sortie_ville = $("#sortie_ville")
-        var $token = $("#sortie_token")
-        $sortie_ville.change(function(){
-            var $form =$(this).closest("form")
-            var data =  {}
-            data[$token.attr("²")] = $token.val()
-            data[$sortie_ville.attr("nom")] = $sortie_ville.val()
-            $.post($form.attr("action"),data).then(function (response){
-              $("#sortie_lieu").replaceWith(
-                  $(response).find("#sortie_lieu")
-              )
-            })
-        })
+        let elLieu = document.getElementById('sortie_lieu');
+        let el = document.getElementById('sortie_ville');
+        let ville = el.value;
+        // let lieuSelect = null;
+        // document.body.onload = function addElement() {
+        //     lieuSelect = document.createElement("select");
+        //     console.log(lieuSelect);
+        //     el.insertAdjacentElement("afterend", lieuSelect);
+        //     let lieuOption = document.createElement("option");
+        //     lieuOption.appendChild(document.createTextNode("Choisir lieu"));
+        //     lieuSelect.insertAdjacentElement("afterbegin", lieuOption);
+        // }
+
+        el.onchange = function onChange() {
+            ville = el.value;
+            recupLieux(ville);
+        }
+
+        function recupLieux(ville){
+            fetch ('/sortie/recupererLieux/'+ville)
+                .then(response => response.json())
+                .then(data => {
+                    nbOptions = 0 ;
+                    data.forEach(d => {
+                        elLieu.options[nbOptions] = new Option(d.nom, d.id);
+                        nbOptions ++;
+                    } )
+                })
+        }
+
+
     </script>
 {% endblock %}
