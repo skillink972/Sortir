@@ -24,6 +24,7 @@
             </thead>
             <tbody>
             {% for sortie in sorties %}
+                {% if sortie.etat.id is not same as (7) %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut | date ('d/m/y H:i') }}</td>
@@ -46,6 +47,19 @@
                             {% if sortie.dateHeureDebut > now %}
                                 <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
                             {% endif %}
+                    {% if app.user is same as sortie.organisateur %}
+                        <td>
+                            <a href="{{ path('participant_MonProfil') }}">{{ sortie.organisateur.pseudo}}</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo}}</a>
+                        </td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ path ('sortie_details', {'sortie': sortie.id}) }}">Afficher</a>
+                        {% if (app.user in sortie.participants) and (sortie.etat.id is same as (2)) %}
+                            <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
                         {% else %}
                             {% if sortie.etat.id is same as (2) %}
                                 {% if sortie.organisateur.id is not same as (app.user.id) %}
@@ -53,8 +67,12 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
+                        {% if (sortie.organisateur.id is same as (app.user.id)) and (sortie.etat.id is same as (1) or sortie.etat.id is same as (2) or  sortie.etat.id is same as (3)) %}
+                            <a href="{{ path("sortie_annuler", {"sortie": sortie.id}) }}">Annuler</a>
+                        {% endif %}
                     </td>
                 </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
