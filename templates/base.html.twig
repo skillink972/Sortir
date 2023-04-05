@@ -2,8 +2,11 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Accueil!{% endblock %}</title>
+        <title>{% block title %}Accueil{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
+        <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -16,29 +19,43 @@
     </head>
     <body>
     {% block entete %}
-    <header>
-        <nav>
-{#            {{ path (('participant_modifier'), {'participant' : app.user.id }) }}#}
-            <h1> Sortir.com</h1>
-            <ul style="list-style-type:none;"  >
-                <li ><a class= "link" href="{{ path ('main_index') }}">Accueil</a></li>
-                {% if app.user %}
-                    <li><a class= "link" href="{{ path ('sortie_lister') }}">Liste des sorties</a></li>
-                    <li><a class= "link" href="{{ path ('sortie_creer') }}">Créer une sortie</a></li>
-                    <li><a class= "link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
-                    <li><a class= "link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
-                    {% if app.user.admin == true %}
-                        <li><a class= "link" href="{{ path ('admin') }}">Tableau de bord</a></li>
+
+        <main>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">
+                        <div class="logo-image">
+                            <img src="{{ asset('img/logo.png') }}" height="40px" width="40px" alt="">
+                        </div>
+                    </a>
+                    {% if app.user %}
+                    <div class="blink_me">Bonjour {{ app.user.pseudo }}</div>
                     {% endif %}
-                    <li> Bonjour {{ app.user.pseudo }} :-) </li>
-                {% endif %}
-                {%  if  app.user==null %}
-                    <li><a class= "link" href="{{ path ('app_register') }}">Créer un compte</a></li>
-                    <li><a class= "link" href="{{ path ('app_login') }}">Se connecter</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarsExample04">
+                        <ul class="navbar-nav mr-auto  mb-2 mb-md-0 ">
+                            {% if app.user %}
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('sortie_lister') }}">Liste des sorties</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('sortie_creer') }}">Créer une sortie</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('participant_MonProfil') }}">Mon profil</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('app_logout') }}">Se déconnecter</a></li>
+                                {% if app.user.admin == true %}
+                                    <li class="nav-item"> <a class="nav-link" href="{{ path ('admin') }}">Tableau de bord</a></li>
+                                {% endif %}
+
+                            {% endif %}
+                            {% if  app.user==null %}
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('app_register') }}">Créer un compte</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{ path ('app_login') }}">Se connecter</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </main>
     {% endblock %}
 
     {% for msg in app.flashes ('msgError') %}

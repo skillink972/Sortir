@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\SearchSortieType;
 use App\Form\SortieType;
+use App\Form\SuppressionSortieType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
@@ -168,7 +169,7 @@ class SortieController extends AbstractController
         EntityManagerInterface  $entityManager,
         ParticipantRepository   $participantRepository,
         Request                 $request,
-        EtatRepository $etatRepository
+        EtatRepository          $etatRepository
     ): Response
     {
         $utilisateurConnecte = $participantRepository->findOneBy(["email" => $this->getUser()->getUserIdentifier()]);
@@ -207,6 +208,27 @@ class SortieController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    public function suppressionAdmin(
+        Sortie                 $sortie,
+        EntityManagerInterface $entityManager,
+        EtatRepository         $etatRepository
+    ): Response
+    {
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+        $sortie->setEtat($etatRepository->find(6));
+        $sortie->setInfoSortie('Sortie annulée par la modération');
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        return $this->render('sortie/details.html.twig',
+            compact('sortie')
+        );
+    }
+
+
     #[Route('/annuler/{sortie}',
         name: '_annuler',
         requirements: ['id' => '\d+'])]
@@ -224,12 +246,15 @@ class SortieController extends AbstractController
 
         if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 )) {
 
-                $SortieForm = $this->createForm(SortieType::class, $sortie);
-                $SortieForm->handleRequest($request);
+            try {
+                $motifSuppressionForm = $this->createForm(SuppressionSortieType::class);
+                $motifSuppressionForm->handleRequest($request);
 
-                if ($SortieForm->isSubmitted()) {
-                    try {
+                if ($motifSuppressionForm->isSubmitted() && $motifSuppressionForm->isValid()) {
+
+
                     $sortie->setEtat($etatRepository->find(6));
+                    $sortie->setInfoSortie($motifSuppressionForm->get('motifAnnulation')->getData());
                     $entityManager->persist($sortie);
                     $entityManager->flush();
                     $this->addFlash('msgSucces', "Votre sortie a bien été annulée. Elle reste consultable 1 mois sur le site");
@@ -239,7 +264,11 @@ class SortieController extends AbstractController
                         return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
                     }
                 }
-            return $this->render('sortie/supprimer.html.twig', compact('SortieForm', 'sortie'));
+            } catch (\Exception $e) {
+                $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
+                return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+            }
+            return $this->render('sortie/supprimer.html.twig', compact('motifSuppressionForm', 'sortie'));
         }
 
         return $this->render('sortie/details.html.twig',compact('sortie'));

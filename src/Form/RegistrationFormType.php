@@ -24,32 +24,53 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('pseudo',null,[
-                    'label' => 'Pseudo : '
+                    'label' => 'Pseudo : ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
 
                     ])
 
             ->add('prenom',null,[
-                'label' => 'Prénom : '
+                'label' => 'Prénom : ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
 
             ])
             ->add('nom',null,[
-                'label' => 'Nom : '
+                'label' => 'Nom : ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
 
             ])
             ->add('telephone',null,[
-                'label' => 'Téléphone : '
+                'label' => 'Téléphone : ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
 
             ])
             ->add('email',null,[
-                'label' => 'Email : '
+                'label' => 'Email : ',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
 
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent être identiques.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'first_options'  => ['label' => 'Mot de passe : '],
-                'second_options' => ['label' => 'Confirmation du mot de passe : '],
+                'first_options'  => ['label' => 'Mot de passe : ',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],],
+                'second_options' => ['label' => 'Confirmation mot de passe',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],],
                 'required' => true,
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
