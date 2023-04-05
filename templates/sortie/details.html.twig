@@ -26,6 +26,12 @@
     {% if (sortie.organisateur.id is same as (app.user.id)) and (sortie.etat.id is same as (1) or sortie.etat.id is same as (2) or  sortie.etat.id is same as (3)) %}
         <a href="{{ path("sortie_modifier", {"sortie": sortie.id}) }}"><button class="btn">Modifier sortie</button></a>
     {% endif %}
+    <h4>Organisateur de la sortie :
+        {% if app.user is same as sortie.organisateur %}
+            <a href="{{ path('participant_MonProfil') }}">{{ sortie.organisateur.pseudo }}</a>
+        {% else %}
+            <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo }}</a></h4>
+        {% endif %}
     <h4>Liste des participants inscrits :</h4>
     <table>
         <thead>

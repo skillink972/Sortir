@@ -5,11 +5,7 @@ namespace App\Repository;
 use App\Entity\PropertySearch;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
-use EasyCorp\Bundle\EasyAdminBundle\Contracts\Orm\EntityPaginatorInterface;
-use function Doctrine\ORM\QueryBuilder;
-use function Symfony\Component\String\s;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -82,6 +78,30 @@ class SortieRepository extends ServiceEntityRepository
         }
         return $query;
     }
+
+    public function findAccueil(PropertySearch $search): array
+    {
+        $query = $this
+            ->createQueryBuilder('s')
+            ->select('s')
+            ->innerJoin('s.campus', 'c')
+            ->andWhere('c.nom LIKE :campus')
+            ->setParameter('campus', $search->getCampus()->getNom());
+
+        $q = $this
+            ->createQueryBuilder('se')
+            ->select('se');
+
+        $qb = $q
+            ->innerJoin('s.etat', 'e')
+            ->andWhere('e.id = 5');
+
+        $query = $query
+            ->andWhere($query->expr()->notIn('s',$qb->getDQL()));
+
+        return $query->getQuery()->getResult();
+    }
+
 
     /**
      * Requête liée aux sorties dont je suis l'organisateur/rice

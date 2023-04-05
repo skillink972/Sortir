@@ -7,7 +7,11 @@
     <h1>Création d'une sortie</h1>
 </div>
 {{ form_start(sortieForm) }}
+    {{ form_row(sortieForm.nom) }}
+    {{ form_row(sortieForm.dateHeureDebut) }}
+    {{ form_row(sortieForm.duree) }} minutes
     {{ form_widget(sortieForm) }}
+
     <button>Ajouter une sortie</button>
     {{ form_end(sortieForm) }}
 
@@ -15,15 +19,6 @@
         let elLieu = document.getElementById('sortie_lieu');
         let el = document.getElementById('sortie_ville');
         let ville = el.value;
-        // let lieuSelect = null;
-        // document.body.onload = function addElement() {
-        //     lieuSelect = document.createElement("select");
-        //     console.log(lieuSelect);
-        //     el.insertAdjacentElement("afterend", lieuSelect);
-        //     let lieuOption = document.createElement("option");
-        //     lieuOption.appendChild(document.createTextNode("Choisir lieu"));
-        //     lieuSelect.insertAdjacentElement("afterbegin", lieuOption);
-        // }
 
         el.onchange = function onChange() {
             ville = el.value;

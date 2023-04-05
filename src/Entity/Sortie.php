@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\This;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -16,24 +18,34 @@ class Sortie
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[Assert\NotNull]
+    #[Assert\GreaterThan(new \DateTime('now'))]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
-    #[ORM\Column(nullable: true)]
+    #[Assert\NotNull]
+    #[Assert\Positive]
+    #[ORM\Column(nullable: false)]
     private ?int $duree = null;
 
+    #[Assert\NotNull]
+    #[Assert\LessThan(propertyPath: "dateHeureDebut")]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
+    #[Assert\NotNull]
+    #[Assert\Positive]
     #[ORM\Column]
     private ?int $nbreInscritsMax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $infoSortie = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'Sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
@@ -42,6 +54,7 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $etat = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'Sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
