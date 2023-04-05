@@ -173,7 +173,7 @@ class SortieController extends AbstractController
         EntityManagerInterface  $entityManager,
         ParticipantRepository   $participantRepository,
         Request                 $request,
-        EtatRepository $etatRepository
+        EtatRepository          $etatRepository
     ): Response
     {
         $utilisateurConnecte = $participantRepository->findOneBy(["email" => $this->getUser()->getUserIdentifier()]);
@@ -212,6 +212,28 @@ class SortieController extends AbstractController
             compact('sortie')
         );
     }
+
+    #[IsGranted('ROLE_ADMIN')]
+    public function suppressionAdmin(
+        Sortie                 $sortie,
+        EntityManagerInterface $entityManager,
+        EtatRepository         $etatRepository
+    ): Response
+    {
+        if (!$sortie) {
+            throw $this->createNotFoundException('Cette sortie n\'existe pas');
+        }
+        $sortie->setEtat($etatRepository->find(6));
+        $sortie->setInfoSortie('Sortie annulée par la modération');
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        return $this->render('sortie/details.html.twig',
+            compact('sortie')
+        );
+    }
+
+
 
     #[IsGranted('ROLE_USER')]
     #[Route('/annuler/{sortie}',

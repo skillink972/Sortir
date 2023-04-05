@@ -57,7 +57,8 @@ class SortieType extends AbstractType
                 ])
             ->add('infoSortie', TextType::class,
                 [
-                    'label'         => 'Description et infos : '
+                    'label'         => 'Description et infos : ',
+                    'required'   => false
                 ])
             ->add('campus', EntityType::class,
                 [
