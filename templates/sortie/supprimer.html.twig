@@ -6,10 +6,14 @@
 <div class="example-wrapper">
     <h3>Suppresion de la sortie {{ sortie.nom }} ({{ sortie.etat.libelle }})</h3>
 </div>
-    {{ form_start(SortieForm) }}
-    <label for="">Motif de l'annulation de votre sortie : </label> {{ form_widget(SortieForm.infoSortie) }} <br>
-    <button class="btn">Supprimer sortie</button>
-    {{ form_end(SortieForm, {render_rest: false}) }}
+
+    {{ form_start(motifSuppressionForm) }}
+    {{ form_widget(motifSuppressionForm) }}
+    <button>Supprimer</button>
+    {{ form_end(motifSuppressionForm) }}
+
+{#    <a href="{{ path("sortie_annuler", {"sortie": sortie.id}) }}"><button class="btn">Supprimer sortie</button></a>#}
+
 
 
 
