@@ -82,22 +82,7 @@ footer {
 }
 
 @media screen and (min-width: 680px) {
-    .team-members article {
-        flex-direction: row;
-    }
 
-    .team-members article:nth-child(odd) {
-        flex-direction: row-reverse;
-    }
-
-    .team-members article img {
-        margin-right: 20px;
-    }
-
-    .team-members article:nth-child(odd) img {
-        margin-right: 0;
-        margin-left: 20px;
-    }
 }
 
 main a {
@@ -127,4 +112,15 @@ td, th {
     text-align: center;
     padding: 5px;
 }
+.blink_me {
+    animation: blinker 2s linear infinite;
+    color: blueviolet;
+    font-size: 20px;
+    font-weight: bold;
+}
 
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
