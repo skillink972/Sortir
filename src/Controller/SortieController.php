@@ -259,10 +259,6 @@ class SortieController extends AbstractController
                     $entityManager->flush();
                     $this->addFlash('msgSucces', "Votre sortie a bien été annulée. Elle reste consultable 1 mois sur le site");
                     return $this->redirectToRoute('sortie_lister');
-                    } catch (\Exception $e) {
-                        $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
-                        return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
-                    }
                 }
             } catch (\Exception $e) {
                 $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
