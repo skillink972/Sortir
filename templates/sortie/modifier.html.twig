@@ -1,15 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer sortie{% endblock %}
+{% block title %}Modifier sortie{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
-    <h1>Création d'une sortie</h1>
-</div>
-{{ form_start(sortieForm) }}
-    {{ form_widget(sortieForm) }}
-    <button>Ajouter une sortie</button>
-    {{ form_end(sortieForm) }}
+    <div class="example-wrapper">
+        <h1>Modification de votre sortie</h1>
+    </div>
+    {{ form_start(SortieForm) }}
+    {{ form_widget(SortieForm) }}
+    <button>Modifier</button>
+    {{ form_end(SortieForm) }}
+    <a href="{{ path("sortie_annuler", {"sortie": sortie.id}) }}"><button class="btn">Supprimer sortie</button></a>
 
     <script>
         let elLieu = document.getElementById('sortie_lieu');

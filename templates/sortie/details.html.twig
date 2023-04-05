@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
 <h3>Détails de la sortie {{ sortie.nom }} ({{ sortie.etat.libelle }})</h3>
     <p>
         Date et heure de la sortie : {{ sortie.dateHeureDebut | date ('d/m/y H:i') }} <br>
@@ -22,7 +23,9 @@
             Longitude : {{ sortie.lieu.longitude }} <br>
         {% endif %}
     </p>
-
+    {% if (sortie.organisateur.id is same as (app.user.id)) and (sortie.etat.id is same as (1) or sortie.etat.id is same as (2) or  sortie.etat.id is same as (3)) %}
+        <a href="{{ path("sortie_modifier", {"sortie": sortie.id}) }}"><button class="btn">Modifier sortie</button></a>
+    {% endif %}
     <h4>Liste des participants inscrits :</h4>
     <table>
         <thead>
@@ -58,6 +61,7 @@
             {% endif %}
         {% endif %}
     {% endif %}
+    <a href="{{ path("sortie_lister") }}">Retour</a>
 {% endblock %}
 
 {% block title %}

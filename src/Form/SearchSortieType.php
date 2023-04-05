@@ -18,13 +18,6 @@ class SearchSortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-//            ->add('campus', ChoiceType::class,
-//                [
-//                    'choices'       =>
-//                        [
-//                            new Campus()
-//                        ]
-//                ])
             ->add('campus', EntityType::class,
                 [
                     'label'         => 'Campus',

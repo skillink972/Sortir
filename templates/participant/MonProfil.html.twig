@@ -1,13 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-           {% if app.user.photo != null %}
-               <img src="{{ asset('photos_utilisateurs/'~app.user.photo) }}" alt="photo de profil de {{ app.user.pseudo }} "> <br><br>
-           {% endif %}
         <div>
-               <p>
-              Pseudo  : {{ app.user.pseudo }} <br>
+            {% if app.user.photo != null %}
+                <img src="{{ asset('photos_utilisateurs/'~app.user.photo) }}" alt="photo de profil de {{ app.user.pseudo }} "> <br><br>
+            {% endif %}
+        </div>
+
+        <div>
+            <h2> {{ app.user.pseudo }} <br></h2>
+
+
+            <p>
               Prénom : {{ app.user.prenom }} <br>
               Nom : {{ app.user.nom }} <br>
               Téléphone : {{ app.user.telephone }} <br>

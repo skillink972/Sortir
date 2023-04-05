@@ -3,11 +3,11 @@
 {% block body %}
 
     <div>
+        <h2>  {{ autreProfil.pseudo }} </h2>
         <p>
             {% if autreProfil.photo != null %}
                 <img src="{{ asset('photos_utilisateurs/'~autreProfil.photo) }}" alt="photo de profil de {{ autreProfil.pseudo  }} "> <br><br>
             {% endif %}
-            Pseudo  : {{ autreProfil.pseudo }} <br>
             Prénom : {{ autreProfil.prenom }} <br>
             Nom : {{ autreProfil.nom }} <br>
             Téléphone : {{ autreProfil.telephone }} <br>

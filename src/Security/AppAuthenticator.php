@@ -40,7 +40,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             });
         } else {
             $userBadge = new UserBadge($username, function ($username) {
-                return $this->userRepository->findOneByEmailOrUsername($username);
+                return $this->userRepository->findOneByUsername($username);
             });
         }
 

@@ -7,6 +7,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -92,6 +93,25 @@ class ParticipantController extends AbstractController
 
 
         if ($participantForm->isSubmitted() && $participantForm->isValid() ) {
+
+            $profilePicture = $participantForm->get('profilePicture')->getData();
+
+            if ($profilePicture) {
+                $originalFilename = pathinfo($profilePicture->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$profilePicture->guessExtension();
+
+
+                try {
+                    $profilePicture->move(
+                        $this->getParameter('photos_utilisateurs_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+
+                }
+
+                $participant->setPhoto($newFilename);
+            }
 
             $participant->setPseudo($participant->getPseudo());
             $participant->setPrenom($participant->getPrenom());
