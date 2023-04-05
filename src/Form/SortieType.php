@@ -58,7 +58,7 @@ class SortieType extends AbstractType
             ->add('infoSortie', TextType::class,
                 [
                     'label'         => 'Description et infos : ',
-                    'required'   => false
+                    'required'      => false
                 ])
             ->add('campus', EntityType::class,
                 [
@@ -90,7 +90,6 @@ class SortieType extends AbstractType
                 ])
         ;
 
-
         $builder
             ->addEventListener(
                 FormEvents::PRE_SET_DATA,
@@ -112,8 +111,6 @@ class SortieType extends AbstractType
                     $form = $event->getForm();
                     $lieu = $event->getData()['lieu'];
                     $objetLieu = $this->lieuRepository->findOneBy(['id'=>$lieu]);
-                    dump($objetLieu);
-                    dump($lieu);
                     if ($lieu) {
                         $form->add('lieu', EntityType::class,
                             [
@@ -122,7 +119,6 @@ class SortieType extends AbstractType
                                 'choices'       => [$objetLieu],
                                 'choice_label'  => 'nom'
                             ]);
-                        dump([$lieu => $objetLieu]);
                     }
                 }
             );

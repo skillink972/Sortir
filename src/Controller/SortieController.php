@@ -26,28 +26,25 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use function Sodium\add;
 
+#[IsGranted('ROLE_USER')]
 #[Route('/sortie', name:'sortie')]
 class SortieController extends AbstractController
 {
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/lister', name: '_lister')]
     public function lister(
         Request               $request,
         SortieRepository      $sortieRepository,
-        ParticipantRepository $participantRepository,
-        EntityManagerInterface $entityManager
+        ParticipantRepository $participantRepository
     ): Response
     {
         $now = new \DateTime;
-        dump($now);
         $search = new PropertySearch();
         $userConnecte = $participantRepository->findOneBy(
             [
                 'id' => $this->getUser()
             ]
         );
-
         $search->setCampus($userConnecte->getCampus());
         $search->setUser($userConnecte);
         $searchForm = $this->createForm(SearchSortieType::class, $search);
@@ -68,88 +65,88 @@ class SortieController extends AbstractController
         $sortiesINP = array_merge($sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
         $sortiesOINP = array_merge($sortieRepository->findSearch1($search),$sortieRepository->findSearch2($search),$sortieRepository->findSearch3($search), $sortieRepository->findSearch4($search));
 
-        if ($search->isOrganisateur()) {
-            if ($search->isInscrit()) {
-                if ($search->isNonInscrit()) {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesOINP;
+            if ($search->isOrganisateur()) {
+                if ($search->isInscrit()) {
+                    if ($search->isNonInscrit()) {
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesOINP;
+                        }
+                        else {
+                            $sorties = $sortiesOIN;
+                        }
                     }
                     else {
-                        $sorties = $sortiesOIN;
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesOIP;
+                        }
+                        else {
+                            $sorties = $sortiesOI;
+                        }
                     }
                 }
                 else {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesOIP;
+                    if ($search->isNonInscrit()) {
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesONP;
+                        }
+                        else {
+                            $sorties = $sortiesON;
+                        }
                     }
                     else {
-                        $sorties = $sortiesOI;
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesOP;
+                        }
+                        else {
+                            $sorties = $sortiesO;
+                        }
                     }
                 }
             }
             else {
-                if ($search->isNonInscrit()) {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesONP;
+                if ($search->isInscrit()) {
+                    if ($search->isNonInscrit()) {
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesINP;
+                        }
+                        else {
+                            $sorties = $sortiesIN;
+                        }
                     }
                     else {
-                        $sorties = $sortiesON;
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesIP;
+                        }
+                        else {
+                            $sorties = $sortiesI;
+                        }
                     }
                 }
                 else {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesOP;
+                    if ($search->isNonInscrit()) {
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesNP;
+                        }
+                        else {
+                            $sorties = $sortiesN;
+                        }
                     }
                     else {
-                        $sorties = $sortiesO;
+                        if ($search->isPassees()) {
+                            $sorties = $sortiesP;
+                        }
+                        else {
+                            $sorties = $sortieRepository->findAccueil($search);
+                        }
                     }
                 }
             }
-        }
-        else {
-            if ($search->isInscrit()) {
-                if ($search->isNonInscrit()) {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesINP;
-                    }
-                    else {
-                        $sorties = $sortiesIN;
-                    }
-                }
-                else {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesIP;
-                    }
-                    else {
-                        $sorties = $sortiesI;
-                    }
-                }
-            }
-            else {
-                if ($search->isNonInscrit()) {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesNP;
-                    }
-                    else {
-                        $sorties = $sortiesN;
-                    }
-                }
-                else {
-                    if ($search->isPassees()) {
-                        $sorties = $sortiesP;
-                    }
-                    else {
-                        $sorties = $sortiesI;
-                    }
-                }
-            }
-        }
+
         return $this->render('sortie/lister.html.twig',
             compact('searchForm', 'sorties', 'now')
         );
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/recupererLieux/{ville}', name: '_recupererLieux')]
     public function recupererLieux (
         LieuRepository $lieuRepository,
@@ -167,7 +164,6 @@ class SortieController extends AbstractController
         return new Response($productSerialized);
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/creer', name: '_creer')]
     public function creer(
         EntityManagerInterface  $entityManager,
@@ -199,7 +195,6 @@ class SortieController extends AbstractController
             compact('sortieForm', 'sortie'));
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/details/{sortie}', name: '_details')]
     public function details(
         Sortie $sortie
@@ -234,8 +229,6 @@ class SortieController extends AbstractController
     }
 
 
-
-    #[IsGranted('ROLE_USER')]
     #[Route('/annuler/{sortie}',
         name: '_annuler',
         requirements: ['id' => '\d+'])]
@@ -251,7 +244,6 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('Cette sortie n\'existe pas');
         }
 
-
         if($sortie->getOrganisateur() === $this->getUser() and ($sortie->getEtat()->getId() == 1 or $sortie->getEtat()->getId() == 2  or $sortie->getEtat()->getId() == 3 )) {
 
             try {
@@ -260,12 +252,17 @@ class SortieController extends AbstractController
 
                 if ($motifSuppressionForm->isSubmitted() && $motifSuppressionForm->isValid()) {
 
+
                     $sortie->setEtat($etatRepository->find(6));
                     $sortie->setInfoSortie($motifSuppressionForm->get('motifAnnulation')->getData());
                     $entityManager->persist($sortie);
                     $entityManager->flush();
                     $this->addFlash('msgSucces', "Votre sortie a bien été annulée. Elle reste consultable 1 mois sur le site");
                     return $this->redirectToRoute('sortie_lister');
+                    } catch (\Exception $e) {
+                        $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
+                        return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
+                    }
                 }
             } catch (\Exception $e) {
                 $this->addFlash('msgError', "Votre sortie n'a pas pu être annulée.");
@@ -277,7 +274,6 @@ class SortieController extends AbstractController
         return $this->render('sortie/details.html.twig',compact('sortie'));
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/modifier/{sortie}',
         name: '_modifier',
         requirements: ['id' => '\d+'])]
@@ -317,14 +313,12 @@ class SortieController extends AbstractController
         }
 
 
-
-    #[IsGranted('ROLE_USER')]
     #[Route('/participer/{sortie}', name: '_participer')]
     public function participer(
         Sortie                 $sortie,
         ParticipantRepository  $participantRepository,
         EntityManagerInterface $entityManager
-    ): Response
+    ) : Response
     {
         $participant = $participantRepository->findOneBy(
             [
@@ -348,10 +342,9 @@ class SortieController extends AbstractController
         } else {
             $this->addFlash('msgError', "Vous ne pouvez pas vous inscrire à cette sortie car le nombre maximum de participants est atteint.");
         }
-        return $this->render('sortie/lister.html.twig');
+        return $this->redirectToRoute('sortie_lister');
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/seDesister/{sortie}', name: '_seDesister')]
     public function seDesister(
         Sortie                 $sortie,
@@ -367,8 +360,14 @@ class SortieController extends AbstractController
         if (!$sortie) {
             throw $this->createNotFoundException('Cette sortie n\'existe pas');
         }
-        foreach ($participant->getSortiesParticipees() as $sortieParticipee) {
-            if ($sortieParticipee === $sortie) {
+        $inscrit = false;
+        foreach ($sortie->getParticipants() as $participantALaSortie)
+        {
+            if ($participant === $participantALaSortie){
+                $inscrit = true;
+            }
+        }
+            if ($inscrit && $sortie->getDateHeureDebut() > new \DateTime('now')) {
                 try {
                     $sortie->removeParticipant($participant);
                     $entityManager->persist($sortie);
@@ -380,8 +379,11 @@ class SortieController extends AbstractController
                     return $this->redirectToRoute('sortie_lister');
                 }
             }
-        }
-        return $this->render('sortie/lister.html.twig');
+            else {
+                $this->addFlash('msgError', "Vous ne pouvez pas vous désinscrire de cette sortie.");
+            }
+
+        return $this->redirectToRoute('sortie_lister');
     }
 
 }

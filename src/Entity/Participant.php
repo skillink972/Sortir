@@ -12,9 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-
 #[UniqueEntity(fields: ['email'], message: 'Il semblerait que vous ayez déjà un compte.')]
-
+#[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà pris, veuillez en choisir un autre.')]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,6 +21,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotNull]
     #[Assert\Email]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -35,12 +35,15 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(length: 100)]
     private ?string $prenom = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(length: 100, unique: true)]
     private ?string $pseudo = null;
 
@@ -53,6 +56,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'stagiaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
