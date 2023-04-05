@@ -1,4 +1,5 @@
 /.idea
+/public/photos_utilisateurs/
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

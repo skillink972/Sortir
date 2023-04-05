@@ -13,12 +13,11 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, Participant::class);
     }
 
-    public function findOneByEmailOrUsername(string $emailOrUsername): ?Participant
+    public function findOneByUsername(string $username): ?Participant
     {
         $qb = $this->createQueryBuilder('p')
-            ->where('p.email = :emailOrUsername')
-            ->orWhere('p.pseudo = :emailOrUsername')
-            ->setParameter('emailOrUsername', $emailOrUsername);
+            ->orWhere('p.pseudo = :username')
+            ->setParameter('username', $username);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

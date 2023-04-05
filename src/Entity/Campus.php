@@ -24,6 +24,9 @@ class Campus
     #[ORM\OneToMany(mappedBy: 'campus', targetEntity: Participant::class)]
     private Collection $stagiaires;
 
+    #[ORM\Column(length: 2)]
+    private ?string $departement = null;
+
     public function __construct()
     {
         $this->Sorties = new ArrayCollection();
@@ -103,6 +106,18 @@ class Campus
                 $stagiaire->setCampus(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartement(): ?string
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(string $departement): self
+    {
+        $this->departement = $departement;
 
         return $this;
     }
