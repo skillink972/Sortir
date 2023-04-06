@@ -4,7 +4,7 @@
     <br>
 <body class="text-center">
         <div>
-            {% if app.user.photo != null %}
+            {% if app.user.photo != null  %}
                 <img src="{{ asset('photos_utilisateurs/'~app.user.photo) }}" alt="photo de profil de {{ app.user.pseudo }} " height="200px" width="200px"> <br><br>
             {% endif %}
         </div>
