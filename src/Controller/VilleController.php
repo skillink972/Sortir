@@ -28,7 +28,7 @@ class VilleController extends AbstractController
                 $entityManager->persist($ville);
                 $entityManager->flush();
                 $this->addFlash('msgSucces', "La ville a été ajoutée avec succès !");
-                return $this->redirectToRoute('sortie_creer');
+                return $this->redirectToRoute('lieu_creer');
             } catch (\Exception $exception) {
                 $this->addFlash('msgError', "La ville n'a pas pu être ajoutée.");
                 return $this->redirectToRoute('ville_creer');
