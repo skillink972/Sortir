@@ -18,20 +18,23 @@ class MainController extends AbstractController
         ParticipantRepository $participantRepository
     ): Response
     {
-        $user = $participantRepository->findOneBy(
-            [
-                'id'        => $this->getUser()
-            ]
-        );
-        $sorties = $sortieRepository->findBy(
-            [
-                'etat'      => 2,
-                'campus'    => $user->getCampus()
-            ]
-        );
-        return $this->render('main/index.html.twig',
-            compact( 'sorties')
-        );
+        if ($this->getUser()) {
+            $user = $participantRepository->findOneBy(
+                [
+                    'id'        => $this->getUser()
+                ]
+            );
+            $sorties = $sortieRepository->findBy(
+                [
+                    'etat'      => 2,
+                    'campus'    => $user->getCampus()
+                ]
+            );
+            return $this->render('main/index.html.twig',
+                compact( 'sorties')
+            );
+        }
+        return $this->render('main/index.html.twig');
     }
 
 
