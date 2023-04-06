@@ -4,5 +4,6 @@
 
     <h3>Êtes-vous sûr.e de vouloir supprimer votre compte de la plateforme Sortir.com ? </h3>
     <a href="{{ path('participant_supprimer', {'participant': app.user.id }) }}" > <button class="btn">Supprimer mon compte</button> </a>
+    <a href="{{ path('participant_MonProfil') }}" > <button class="btn">Annuler</button> </a>
 
 {% endblock %}
