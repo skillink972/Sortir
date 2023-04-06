@@ -35,7 +35,10 @@ class SortieType extends AbstractType
         $builder
             ->add('nom', TextType::class,
                 [
-                    'label'         => 'Nom de la sortie : '
+                    'label'         => 'Nom de la sortie : ',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
                 ])
             ->add('dateHeureDebut', DateTimeType::class,
                 [
@@ -44,7 +47,10 @@ class SortieType extends AbstractType
                 ])
             ->add('duree', IntegerType::class,
                 [
-                    'label'         => 'Durée : '
+                    'label'         => 'Durée(en minutes): ',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
                 ])
             ->add('dateLimiteInscription', DateTimeType::class,
                 [
@@ -53,11 +59,17 @@ class SortieType extends AbstractType
                 ])
             ->add('nbreInscritsMax', IntegerType::class,
                 [
-                    'label'         => 'Nombre de places : '
+                    'label'         => 'Nombre de places : ',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
                 ])
             ->add('infoSortie', TextType::class,
                 [
                     'label'         => 'Description et infos : ',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
                     'required'      => false
                 ])
             ->add('campus', EntityType::class,
@@ -86,7 +98,10 @@ class SortieType extends AbstractType
                             ->andWhere('v.codePostal LIKE :cp')
                             ->setParameter('cp', "{$user->getCampus()->getDepartement()}%");
                     },
-                    'placeholder'   => 'Choisissez une ville'
+                    'placeholder'   => 'Choisissez une ville',
+                    'attr' => [
+                        'class' => 'form-control',
+                    ],
                 ])
         ;
 
