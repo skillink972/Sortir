@@ -3,24 +3,34 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
- <h2>Sorties à venir </h2>
-    {% if app.user %}
-        <div>
-            {% for s in sorties %}
-                <a href="{{ path('sortie_details', {'sortie': s.id}) }}">
+<body class="text-center">
+{% if app.user %}
+    <h2>Sorties à venir </h2>
+
+      <div>
+    {% for s in sorties %}
+             <a class= "link" href="{{ path('sortie_details', {'sortie': s.id}) }}">
                     <div id="card">
-                        <h4>{{ s.nom }}</h4> <br>
+                        <h4>{{ s.nom }}</h4></a> <br>
+
 
                         Le {{ s.dateHeureDebut | date ('d/m/y') }} à {{ s.dateHeureDebut | date ('H:i') }} <br>
-                        <div>Places restantes : {{ s.participants.count() }}/{{ s.nbreInscritsMax }}</div>
+                        {% if (s.participants.count() == s.nbreInscritsMax) %}
+                        <div>
+                            Sortie complète ! Enjaille-toi sur une autre sortie
+                        </div>
+                        {% elseif (s.nbreInscritsMax>s.participants.count())  %}
+                            <div>
+                                Places restantes :  {{ (s.nbreInscritsMax - s.participants.count() ) }}
+                            </div>
+                        {% endif %}
 
-                    </div>
-                </a>
+      </div>
             {% endfor %}
-        </div>
+    </div>
     {% else %}
         <p>Connectez-vous pour accéder aux sorties</p>
     {% endif %}
 
-
+</body>
  {% endblock %}
