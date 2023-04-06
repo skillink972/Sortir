@@ -86,7 +86,7 @@ footer {
 }
 
 main a {
-    color: #8c6956;
+    color: black;
 }
 
 
@@ -151,6 +151,7 @@ tr:nth-child(even) {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 #card {
     width: 200px;
     height: 250px;
@@ -166,5 +167,6 @@ tr:nth-child(even) {
 }
 .link{
     color: #ffffff;
+
 
 }
