@@ -168,8 +168,10 @@ Page accueil
     text-decoration: none;
     margin: 10px;
     padding: 10px;
-
+    overflow-wrap: break-word;
+    overflow: auto;
 }
+
 .link{
     color: #ffffff;
 }

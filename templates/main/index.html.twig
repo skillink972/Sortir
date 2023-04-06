@@ -3,40 +3,36 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<body class="text-center">
-{% if app.user %}
+    <body class="text-center">
+    {% if app.user %}
     <h2>Sorties à venir </h2>
-
-      <div>
-    {% for s in sorties %}
-             <a class= "link" href="{{ path('sortie_details', {'sortie': s.id}) }}">
-                    <div id="card">
-                        <h4>{{ s.nom }}</h4></a> <br>
-
-
-                        Le {{ s.dateHeureDebut | date ('d/m/y') }} à {{ s.dateHeureDebut | date ('H:i') }} <br>
-                        {% if (s.participants.count() == s.nbreInscritsMax) %}
+    <div>
+        {% for s in sorties %}
+            <div id="card">
+                <a class="link" href="{{ path('sortie_details', {'sortie': s.id}) }}">
+                    <h4>{{ s.nom }}</h4>
+                </a> <br>
+                Le {{ s.dateHeureDebut | date ('d/m/y') }} à {{ s.dateHeureDebut | date ('H:i') }} <br>
+                {% if (s.participants.count() == s.nbreInscritsMax) %}
+                    <div>
+                        Sortie complète ! Enjaille-toi sur une autre sortie
+                    </div>
+                {% elseif (s.nbreInscritsMax>s.participants.count()) %}
+                    {% if (s.nbreInscritsMax - s.participants.count() ) == 1 %}
                         <div>
-                            Sortie complète ! Enjaille-toi sur une autre sortie
+                            dernière place disponible !
                         </div>
-                        {% elseif (s.nbreInscritsMax>s.participants.count())  %}
-                            {% if (s.nbreInscritsMax - s.participants.count() ) == 1 %}
-                                <div>
-                                    dernière place disponible !
-                                </div>
-                                {% else %}
-                            <div>
-                                Places restantes :  {{ (s.nbreInscritsMax - s.participants.count() ) }}
-                            </div>
-                        {% endif %}
-                        {% endif %}
-
-      </div>
-            {% endfor %}
+                    {% else %}
+                        <div>
+                            Places restantes : {{ (s.nbreInscritsMax - s.participants.count() ) }}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% else %}
+            <p>Connectez-vous pour accéder aux sorties</p>
+        {% endif %}
     </div>
-    {% else %}
-        <p>Connectez-vous pour accéder aux sorties</p>
-    {% endif %}
-
-</body>
- {% endblock %}
+    </body>
+{% endblock %}
