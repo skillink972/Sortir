@@ -2,7 +2,19 @@
 
 {% block title %}Accueil{% endblock %}
 
-
-
 {% block body %}
+ <h2>Sorties à venir </h2>
+
+ <div>
+  {% for s in sorties %}
+      <a href="{{ path('sortie_details', {'sortie': s.id}) }}">
+          <div id="card">
+              <h4>{{ s.nom }}</h4> <br>
+              Le {{ s.dateHeureDebut | date ('d/m/y') }} à {{ s.dateHeureDebut | date ('H:i') }} <br><br><br><br><br>
+              Places restantes : {{ s.participants.count() }}/{{ s.nbreInscritsMax }}
+          </div>
+      </a>
+  {% endfor %}
+ </div>
+
  {% endblock %}

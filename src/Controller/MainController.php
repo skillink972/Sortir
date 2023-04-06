@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,11 +13,25 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'main_index')]
-    public function index(): Response
+    public function index(
+        SortieRepository $sortieRepository,
+        ParticipantRepository $participantRepository
+    ): Response
     {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        $user = $participantRepository->findOneBy(
+            [
+                'id'        => $this->getUser()
+            ]
+        );
+        $sorties = $sortieRepository->findBy(
+            [
+                'etat'      => 2,
+                'campus'    => $user->getCampus()
+            ]
+        );
+        return $this->render('main/index.html.twig',
+            compact( 'sorties')
+        );
     }
 
 
