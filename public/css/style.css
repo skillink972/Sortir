@@ -112,6 +112,13 @@ td, th {
     text-align: center;
     padding: 5px;
 }
+
+tr:nth-child(odd) {
+    background-color: #7c7cf1;
+}
+tr:nth-child(even) {
+    background-color: #cfcfea;
+}
 .blink_me {
     animation: blinker 2s linear infinite;
     color: blueviolet;

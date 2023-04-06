@@ -21,7 +21,7 @@ class SortieCrudController extends AbstractCrudController
 
     }
 
-    public function deleteEntity(EntityManagerInterface $entityManager,$entityInstance): void
+    public function deleteEntity(EntityManagerInterface $entityManager,$entityInstance) : void
     {
         if (!$entityInstance instanceof Sortie) return;
 
