@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<body class="text-center">
+<style>
+    th, td{
+        color: white;
+    }
+</style>
 <h3>Détails de la sortie {{ sortie.nom }} ({{ sortie.etat.libelle }})</h3>
     <p>
         Date et heure de la sortie : {{ sortie.dateHeureDebut | date ('d/m/y H:i') }} <br>
@@ -37,7 +42,7 @@
             <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo }}</a></h4>
         {% endif %}
     <h4>Liste des participants inscrits :</h4>
-    <table>
+    <table align="center">
         <thead>
             <tr>
                 <th>Pseudo</th>
@@ -49,11 +54,11 @@
                 <tr>
                     {% if app.user is same as participant %}
                     <td>
-                        <a href="{{ path('participant_MonProfil') }}">{{ participant.pseudo}}</a>
+                        <a class= "link" href="{{ path('participant_MonProfil') }}">{{ participant.pseudo}}</a>
                     </td>
                         {% else %}
                     <td>
-                        <a href="{{ path('participant_Autreprofil',{'participant': participant.id})  }}">{{ participant.pseudo}}</a>
+                        <a class= "link" href="{{ path('participant_Autreprofil',{'participant': participant.id})  }}">{{ participant.pseudo}}</a>
                     </td>
                      {% endif %}
                     <td>{{ participant.prenom }} {{ participant.nom }}</td>
@@ -72,6 +77,7 @@
         {% endif %}
     {% endif %}
     <a href="{{ path("sortie_lister") }}">Retour</a>
+</body>
 {% endblock %}
 
 {% block title %}
