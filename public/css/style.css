@@ -153,6 +153,9 @@ tr:nth-child(even) {
     border-top-right-radius: 0;
 }
 
+/**
+Page accueil
+*/
 #card {
     width: 200px;
     height: 250px;
@@ -169,4 +172,10 @@ tr:nth-child(even) {
 }
 .link{
     color: #ffffff;
+}
+
+.btn  {
+    background: linear-gradient(to bottom right, purple, deepskyblue);
+    color: white;
+    margin: 5px;
 }
