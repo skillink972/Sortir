@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
 use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -140,13 +141,23 @@ class ParticipantController extends AbstractController
     )]
     public function supprimer(
         Participant             $participant,
-        EntityManagerInterface  $entityManager
+        EntityManagerInterface  $entityManager,
+        SortieRepository $sortieRepository
     ): Response {
 
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        return $this->render('main/index.html.twig');
+        $session = $this->getUser();
+        $session->eraseCredentials();
+
+        $sorties = $sortieRepository->findBy(
+            [
+                'etat'      => 2
+            ]
+        );
+
+        return $this->render('main/index.html.twig', compact('sorties','session'));
     }
 
 }

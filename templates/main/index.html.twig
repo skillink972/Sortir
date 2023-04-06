@@ -4,6 +4,9 @@
 
 {% block body %}
 <body class="text-center">
+{% if app.user == null %}
+    <p>Connectez-vous pour accéder aux sorties</p>
+{% endif %}
 {% if app.user %}
     <h2>Sorties à venir </h2>
 
@@ -20,14 +23,20 @@
                             Sortie complète ! Enjaille-toi sur une autre sortie
                         </div>
                         {% elseif (s.nbreInscritsMax>s.participants.count())  %}
+                            {% if (s.nbreInscritsMax - s.participants.count() ) == 1 %}
+                                <div>
+                                    dernière place disponible !
+                                </div>
+                                {% else %}
                             <div>
                                 Places restantes :  {{ (s.nbreInscritsMax - s.participants.count() ) }}
                             </div>
                         {% endif %}
+                        {% endif %}
 
       </div>
             {% endfor %}
-    </div>
+
     {% else %}
         <div class="logo-image">
             <img src="{{ asset('img/smile.png') }}" height="190px" width="190px" alt="">

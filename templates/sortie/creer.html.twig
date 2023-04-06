@@ -24,9 +24,9 @@
     {{ form_row(sortieForm.dateHeureDebut) }}
     {{ form_row(sortieForm.duree) }}
     {{ form_widget(sortieForm) }}
-    <a href="{{ path('lieu_creer') }}">Ajouter lieu</a> <br>
-    <button>Ajouter une sortie</button>
-
+    <a href="{{ path('lieu_creer') }}" class="btn">Ajouter un lieu</a> <br>
+    <button class="btn">Ajouter une sortie</button>
+    <a href="{{ path('sortie_lister') }}" class="btn">Retour</a>
     {{ form_end(sortieForm) }}
 
     <script>

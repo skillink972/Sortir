@@ -23,8 +23,8 @@
             {{ form_row(participantForm.campus) }}
             {{ form_row(participantForm.profilePicture) }}
         <button type="submit" class="btn">Modifier </button>
+        <a href="{{ path('participant_MonProfil') }}" class="btn">Retour</a>
         {{ form_end(participantForm) }}
-<br>
         <a href="{{ path('participant_ConfirmationSuppression') }}" > <button class="btn">Supprimer mon compte</button> </a>
     </div>
 </main>

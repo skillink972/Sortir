@@ -35,13 +35,13 @@
     {% if (sortie.organisateur.id is same as (app.user.id)) and (sortie.etat.id is same as (1) or sortie.etat.id is same as (2) or  sortie.etat.id is same as (3)) %}
         <a href="{{ path("sortie_modifier", {"sortie": sortie.id}) }}"><button class="btn">Modifier sortie</button></a>
     {% endif %}
-    <h4>Organisateur de la sortie :
+    <p>Organisateur de la sortie :
         {% if app.user is same as sortie.organisateur %}
             <a href="{{ path('participant_MonProfil') }}">{{ sortie.organisateur.pseudo }}</a>
         {% else %}
-            <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo }}</a></h4>
+            <a href="{{ path('participant_Autreprofil',{'participant': sortie.organisateur.id})  }}">{{ sortie.organisateur.pseudo }}</a></p>
         {% endif %}
-    <h4>Liste des participants inscrits :</h4>
+    <p>Liste des participants inscrits :</p>
     <table align="center">
         <thead>
             <tr>
@@ -68,15 +68,15 @@
     </table>
     <br>
     {% if app.user in sortie.participants %}
-        <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}">Se désinscrire</a>
+        <a href="{{ path("sortie_seDesister", {"sortie": sortie.id}) }}"><button class="btn">Se désinscrire</button></a>
     {% else %}
         {% if sortie.etat.id is same as (2) %}
             {% if sortie.organisateur.id is not same as (app.user.id) %}
-                <a href="{{ path("sortie_participer", {"sortie": sortie.id}) }}">S'inscrire</a>
+                <a href="{{ path("sortie_participer", {"sortie": sortie.id}) }}"><button class="btn">S'inscrire</button></a>
             {% endif %}
         {% endif %}
     {% endif %}
-    <a href="{{ path("sortie_lister") }}">Retour</a>
+    <a href="{{ path("sortie_lister") }}"><button class="btn">Retour</button></a>
 </body>
 {% endblock %}
 
