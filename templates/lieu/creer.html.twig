@@ -7,10 +7,10 @@
     <div>
         {{ form_start(lieuForm) }}
         {{ form_widget(lieuForm) }}
-        <a href="{{ path('ville_creer') }}">Ajouter ville</a><br>
-        <button>Ajouter un lieu</button>
+        <a href="{{ path('ville_creer') }}" class="btn">Ajouter une ville</a> <br>
+        <button class="btn">Ajouter un lieu</button>
+        <a href="{{ path('sortie_creer') }}" class="btn">Retour</a>
         {{ form_end(lieuForm) }}
-        <a href="{{ path('sortie_creer') }}"><button>Retour</button></a>
     </div>
 {% endblock %}
 

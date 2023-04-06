@@ -7,8 +7,8 @@
 <div>
     {{ form_start(villeForm) }}
     {{ form_widget(villeForm) }}
-    <button>Ajouter une ville</button>
+    <button class="btn">Ajouter une ville</button>
+    <a href="{{ path('lieu_creer') }}" class="btn">Retour</a>
     {{ form_end(villeForm) }}
-    <a href="{{ path('lieu_creer') }}"><button>Retour</button></a>
 </div>
 {% endblock %}
