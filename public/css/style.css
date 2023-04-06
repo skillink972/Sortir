@@ -136,6 +136,7 @@ tr:nth-child(even) {
     padding: 15px;
 }
 
+
 .form-signin .form-floating:focus-within {
     z-index: 2;
 }
@@ -164,9 +165,8 @@ tr:nth-child(even) {
     text-decoration: none;
     margin: 10px;
     padding: 10px;
+
 }
 .link{
     color: #ffffff;
-
-
 }
