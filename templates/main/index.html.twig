@@ -20,9 +20,15 @@
                             Sortie complète ! Enjaille-toi sur une autre sortie
                         </div>
                         {% elseif (s.nbreInscritsMax>s.participants.count())  %}
+                            {% if (s.nbreInscritsMax - s.participants.count() ) == 1 %}
+                                <div>
+                                    dernière place disponible !
+                                </div>
+                                {% else %}
                             <div>
                                 Places restantes :  {{ (s.nbreInscritsMax - s.participants.count() ) }}
                             </div>
+                        {% endif %}
                         {% endif %}
 
       </div>
