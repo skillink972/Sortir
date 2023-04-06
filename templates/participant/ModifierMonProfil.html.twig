@@ -1,6 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<style>
+    body {
+        background-color: #9aa6d5;
+    }
+</style>
+<body class="text-center">
+
+<main class="form-signin w-100 m-auto">
+    <h4>Modification Profil</h4>
     <div>
         {{ form_start(participantForm) }}
 
@@ -15,10 +24,10 @@
             {{ form_row(participantForm.profilePicture) }}
         <button type="submit" class="btn">Modifier </button>
         {{ form_end(participantForm) }}
-
+<br>
         <a href="{{ path('participant_ConfirmationSuppression') }}" > <button class="btn">Supprimer mon compte</button> </a>
     </div>
-
+</main>
 {% endblock %}
 
 {% block title %}
