@@ -6,14 +6,15 @@
 <div class="example-wrapper">
     <h1>Création d'une sortie</h1>
 </div>
-{{ form_start(sortieForm) }}
+    {{ form_start(sortieForm) }}
     {{ form_row(sortieForm.nom) }}
     {{ form_row(sortieForm.dateHeureDebut) }}
     {{ form_row(sortieForm.duree) }} minutes
     {{ form_widget(sortieForm) }}
-
     <button>Ajouter une sortie</button>
     {{ form_end(sortieForm) }}
+
+    <a href="{{ path('lieu_creer') }}">Ajouter lieu</a>
 
     <script>
         let elLieu = document.getElementById('sortie_lieu');
@@ -22,6 +23,7 @@
 
         el.onchange = function onChange() {
             ville = el.value;
+            elLieu.remove(0);
             recupLieux(ville);
         }
 
@@ -30,10 +32,16 @@
                 .then(response => response.json())
                 .then(data => {
                     nbOptions = 0 ;
-                    data.forEach(d => {
-                        elLieu.options[nbOptions] = new Option(d.nom, d.id);
+                    if (data.length === 0) {
+                        elLieu.options[nbOptions] = new Option("Aucun lieu");
                         nbOptions ++;
-                    } )
+                    }
+                    else {
+                        data.forEach(d => {
+                            elLieu.options[nbOptions] = new Option(d.nom, d.id);
+                            nbOptions ++;
+                        } )
+                    }
                 })
         }
 

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <h1>Ajout d'un lieu</h1>
+    <div>
+        {{ form_start(lieuForm) }}
+        {{ form_widget(lieuForm) }}
+        <a href="{{ path('ville_creer') }}">Ajouter ville</a><br>
+        <button>Ajouter un lieu</button>
+        {{ form_end(lieuForm) }}
+        <a href="{{ path('sortie_creer') }}"><button>Retour</button></a>
+    </div>
+{% endblock %}
+

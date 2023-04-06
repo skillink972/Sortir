@@ -187,7 +187,7 @@ class SortieController extends AbstractController
                 $this->addFlash('msgSucces', 'La sortie a été créée avec succès !');
                 return $this->redirectToRoute('sortie_details', ['sortie' => $sortie->getId()]);
             } catch (\Exception $exception) {
-                $this->addFlash('msgError', 'La sortie n\'a pas pu être créée :( '.$exception);
+                $this->addFlash('msgError', 'La sortie n\'a pas pu être créée :( ');
                 return $this->render('sortie/creer.html.twig');
             }
         }
