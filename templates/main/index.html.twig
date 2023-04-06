@@ -11,7 +11,7 @@
                     <div id="card">
                         <h4>{{ s.nom }}</h4> <br>
                         Le {{ s.dateHeureDebut | date ('d/m/y') }} à {{ s.dateHeureDebut | date ('H:i') }} <br><br><br><br><br>
-                        Places restantes : {{ s.participants.count() }}/{{ s.nbreInscritsMax }}
+                        Places restantes : {% if %}{{ s.participants.count() }}/{{ s.nbreInscritsMax }}
                     </div>
                 </a>
             {% endfor %}

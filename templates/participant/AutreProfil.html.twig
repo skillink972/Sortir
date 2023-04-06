@@ -1,12 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+<br>
+<body class="text-center">
     <div>
         <h2>  {{ autreProfil.pseudo }} </h2>
         <p>
             {% if autreProfil.photo != null %}
-                <img src="{{ asset('photos_utilisateurs/'~autreProfil.photo) }}" alt="photo de profil de {{ autreProfil.pseudo  }} "> <br><br>
+                <img src="{{ asset('photos_utilisateurs/'~autreProfil.photo) }}" alt="photo de profil de {{ autreProfil.pseudo  }} " height="200px" width="200px"> <br><br>
             {% endif %}
             Prénom : {{ autreProfil.prenom }} <br>
             Nom : {{ autreProfil.nom }} <br>
