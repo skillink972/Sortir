@@ -36,9 +36,14 @@
 
       </div>
             {% endfor %}
-    </div>
-{% endif %}
 
+    {% else %}
+        <div class="logo-image">
+            <img src="{{ asset('img/smile.png') }}" height="190px" width="190px" alt="">
+        </div>
+        <br>
+        <h2>Connectez-vous pour accéder aux sorties</h2>
+    {% endif %}
 
 </body>
  {% endblock %}

@@ -4,7 +4,9 @@ global styles
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: white;
+    background: radial-gradient(#78b7d5,#bd8fd5);
+    background-size: inherit;
+
 }
 
 .container {
