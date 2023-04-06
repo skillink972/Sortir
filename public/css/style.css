@@ -114,10 +114,10 @@ td, th {
 }
 
 tr:nth-child(odd) {
-    background-color: #7c7cf1;
+    background: linear-gradient(to bottom right, deepskyblue, #023566);
 }
 tr:nth-child(even) {
-    background-color: #cfcfea;
+    background: linear-gradient(to bottom right, #000000, #6d6d6d) ;
 }
 .blink_me {
     animation: blinker 2s linear infinite;
@@ -151,10 +151,8 @@ tr:nth-child(even) {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
 
-/**
-Page accueil
-*/
 #card {
     width: 200px;
     height: 250px;
@@ -167,4 +165,8 @@ Page accueil
     text-decoration: none;
     margin: 10px;
     padding: 10px;
+
+}
+.link{
+    color: #ffffff;
 }

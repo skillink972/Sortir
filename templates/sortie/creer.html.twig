@@ -23,10 +23,10 @@
     {{ form_row(sortieForm.dateHeureDebut) }}
     {{ form_row(sortieForm.duree) }}
     {{ form_widget(sortieForm) }}
-    <button class="btn-danger">Ajouter une sortie</button>
-    {{ form_end(sortieForm) }}
+    <a href="{{ path('lieu_creer') }}">Ajouter lieu</a> <br>
+    <button>Ajouter une sortie</button>
 
-    <a href="{{ path('lieu_creer') }}">Ajouter lieu</a>
+    {{ form_end(sortieForm) }}
 
     <script>
         let elLieu = document.getElementById('sortie_lieu');
