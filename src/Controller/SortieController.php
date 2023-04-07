@@ -154,13 +154,16 @@ class SortieController extends AbstractController
         SerializerInterface $serializer
     ) : Response
     {
+        //récupération des lieux en fonction de la ville
         $lieux = $lieuRepository->findBy(
             [
                 'ville' => $ville
             ]
         );
+        //On met cette liste au format json
         $productSerialized = $serializer->serialize($lieux, 'json', ['groups' => ['group']]);
 
+        //On renvoie la liste au format json
         return new Response($productSerialized);
     }
 
