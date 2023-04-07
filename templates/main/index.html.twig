@@ -4,9 +4,7 @@
 
 {% block body %}
 <body class="text-center">
-{% if app.user == null %}
-    <p>Connectez-vous pour accéder aux sorties</p>
-{% endif %}
+
 {% if app.user %}
     <h2>Sorties à venir </h2>
 
@@ -38,6 +36,7 @@
             {% endfor %}
 
     {% else %}
+
         <div class="logo-image">
             <img src="{{ asset('img/smile.png') }}" height="190px" width="190px" alt="">
         </div>
