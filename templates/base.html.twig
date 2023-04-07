@@ -29,7 +29,8 @@
                             .com
                         </div>
                     </a>
-                    {% if app.user %}
+                    {% if app.user  %}
+
                     <div class="blink_me">Bonjour {{ app.user.pseudo }}</div>
                     {% endif %}
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +49,7 @@
                                 {% endif %}
 
                             {% endif %}
-                            {% if  app.user==null %}
+                            {% if  app.user==null  %}
                                 <li class="nav-item"> <a class="nav-link" href="{{ path ('app_register') }}">Créer un compte</a></li>
                                 <li class="nav-item"> <a class="nav-link" href="{{ path ('app_login') }}">Se connecter</a></li>
                             {% endif %}
