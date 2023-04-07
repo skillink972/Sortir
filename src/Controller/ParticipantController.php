@@ -7,12 +7,15 @@ use App\Form\RegistrationFormType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 #[IsGranted('ROLE_USER')]
 #[Route('/participant', name: 'participant')]
 class ParticipantController extends AbstractController
@@ -142,22 +145,17 @@ class ParticipantController extends AbstractController
     public function supprimer(
         Participant             $participant,
         EntityManagerInterface  $entityManager,
-        SortieRepository $sortieRepository
+        SortieRepository $sortieRepository,
     ): Response {
+
+        $session = new \Symfony\Component\HttpFoundation\Session\Session();
+        $session->invalidate();
 
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        $session = $this->getUser();
-        $session->eraseCredentials();
+        $this->addFlash('msgSucces','Votre compte utilisateur a bien été supprimé ');
 
-        $sorties = $sortieRepository->findBy(
-            [
-                'etat'      => 2
-            ]
-        );
-
-        return $this->render('main/index.html.twig', compact('sorties','session'));
+        return $this->redirectToRoute('main_index');
     }
-
 }
