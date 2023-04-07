@@ -61,7 +61,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
-    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class ) ]
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class , orphanRemoval: true) ]
     private Collection $sortiesOrganisees;
 
     #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants')]
